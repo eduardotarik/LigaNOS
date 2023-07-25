@@ -4,14 +4,16 @@ using LigaNOS.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace LigaNOS.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230721165021_AddGame")]
+    partial class AddGame
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -26,27 +28,29 @@ namespace LigaNOS.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("AwayTeam")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("AwayTeamId")
+                        .HasColumnType("int");
 
                     b.Property<int?>("AwayTeamScore")
-                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("HomeTeam")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("HomeTeamId")
+                        .HasColumnType("int");
 
                     b.Property<int?>("HomeTeamScore")
-                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<bool>("IsPlayed")
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AwayTeamId");
+
+                    b.HasIndex("HomeTeamId");
 
                     b.ToTable("Games");
                 });
@@ -62,21 +66,23 @@ namespace LigaNOS.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Picture")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Position")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("TeamId")
+                        .HasColumnType("int");
+
                     b.Property<string>("TeamName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("TeamId");
 
                     b.ToTable("Players");
                 });
@@ -101,7 +107,6 @@ namespace LigaNOS.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Stadium")
@@ -110,6 +115,34 @@ namespace LigaNOS.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Teams");
+                });
+
+            modelBuilder.Entity("LigaNOS.Data.Entities.Game", b =>
+                {
+                    b.HasOne("LigaNOS.Data.Entities.Team", "AwayTeam")
+                        .WithMany()
+                        .HasForeignKey("AwayTeamId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("LigaNOS.Data.Entities.Team", "HomeTeam")
+                        .WithMany()
+                        .HasForeignKey("HomeTeamId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("AwayTeam");
+
+                    b.Navigation("HomeTeam");
+                });
+
+            modelBuilder.Entity("LigaNOS.Data.Entities.Player", b =>
+                {
+                    b.HasOne("LigaNOS.Data.Entities.Team", "Team")
+                        .WithMany()
+                        .HasForeignKey("TeamId");
+
+                    b.Navigation("Team");
                 });
 #pragma warning restore 612, 618
         }

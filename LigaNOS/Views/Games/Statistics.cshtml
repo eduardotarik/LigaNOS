@@ -1,0 +1,34 @@
+﻿@model List<TeamStatisticsViewModel>
+
+<h1>Team Statistics</h1>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Team Name</th>
+            <th>GP</th>
+            <th>W</th>
+            <th>D</th>
+            <th>L</th>
+            <th>GF</th>
+            <th>GA</th>
+            <th>Pts</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var teamStat in Model)
+        {
+            <tr>
+                <td>@teamStat.TeamName</td>
+                <td>@teamStat.TotalGames</td>
+                <td>@teamStat.Wins</td>
+                <td>@teamStat.Draws</td>
+                <td>@teamStat.Losses</td>
+                <td>@teamStat.GoalsFor</td>
+                <td>@teamStat.GoalsAgainst</td>
+                <td>@teamStat.Points</td>
+            </tr>
+        }
+    </tbody>
+</table>
+

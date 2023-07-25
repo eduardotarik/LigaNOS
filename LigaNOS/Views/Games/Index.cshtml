@@ -1,10 +1,10 @@
-﻿@model IEnumerable<LigaNOS.Data.Entities.Team>
+﻿@model IEnumerable<LigaNOS.Data.Entities.Game>
 
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1>List of Teams</h1>
+<h1>List of Games</h1>
 
 <p>
     <a asp-action="Create" class="btn btn-primary">Create New</a>
@@ -13,22 +13,22 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Emblem)
+                @Html.DisplayNameFor(model => model.Date)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                @Html.DisplayNameFor(model => model.HomeTeam)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Founded)
+                @Html.DisplayNameFor(model => model.AwayTeam)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Country)
+                @Html.DisplayNameFor(model => model.HomeTeamScore)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.City)
+                @Html.DisplayNameFor(model => model.AwayTeamScore)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Stadium)
+                @Html.DisplayNameFor(model => model.IsPlayed)
             </th>
             <th></th>
         </tr>
@@ -37,22 +37,22 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Emblem)
+                @Html.DisplayFor(modelItem => item.Date)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Name)
+                @Html.DisplayFor(modelItem => item.HomeTeam)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Founded)
+                @Html.DisplayFor(modelItem => item.AwayTeam)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Country)
+                @Html.DisplayFor(modelItem => item.HomeTeamScore)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.City)
+                @Html.DisplayFor(modelItem => item.AwayTeamScore)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Stadium)
+                @Html.DisplayFor(modelItem => item.IsPlayed)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary">Edit</a>

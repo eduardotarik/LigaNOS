@@ -7,8 +7,13 @@ namespace LigaNOS.Data
     {
         public DbSet<Team> Teams { get; set; }
 
+        public DbSet<Player> Players { get; set; }
+
+        public DbSet<Game> Games { get; set; }
+
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
         }
+
     }
 }

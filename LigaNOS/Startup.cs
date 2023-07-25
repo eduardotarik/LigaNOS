@@ -30,6 +30,11 @@ namespace LigaNOS
                 cfg.UseSqlServer(this.Configuration.GetConnectionString("DefaultConnection"));
             });
 
+            services.AddTransient<SeedDb>();
+            services.AddScoped<ITeamRepository, TeamRepository>();
+            services.AddScoped<IGameRepository, GameRepository>();
+            services.AddScoped<IPlayerRepository, PlayerRepository>();
+
             services.AddControllersWithViews();
         }
 

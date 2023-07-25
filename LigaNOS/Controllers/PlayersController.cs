@@ -7,26 +7,25 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using LigaNOS.Data;
 using LigaNOS.Data.Entities;
-using System.Xml.Schema;
 
 namespace LigaNOS.Controllers
 {
-    public class TeamsController : Controller
+    public class PlayersController : Controller
     {
-        private readonly ITeamRepository _teamRepository;
+        private readonly IPlayerRepository _playerRepository;
 
-        public TeamsController(ITeamRepository teamRepository)
+        public PlayersController(IPlayerRepository playerRepository)
         {
-            _teamRepository = teamRepository;
+            _playerRepository = playerRepository;
         }
 
-        // GET: Teams
+        // GET: Players
         public IActionResult Index()
         {
-            return View(_teamRepository.GetAll());
+            return View(_playerRepository.GetAll());
         }
 
-        // GET: Teams/Details/5
+        // GET: Players/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -34,37 +33,37 @@ namespace LigaNOS.Controllers
                 return NotFound();
             }
 
-            var team = await _teamRepository.GetByIdAsync(id.Value);
-            if (team == null)
+            var player = await _playerRepository.GetByIdAsync(id.Value);
+            if (player == null)
             {
                 return NotFound();
             }
 
-            return View(team);
+            return View(player);
         }
 
-        // GET: Teams/Create
+        // GET: Players/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Teams/Create
+        // POST: Players/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Team team)
+        public async Task<IActionResult> Create(Player player)
         {
             if (ModelState.IsValid)
             {
-                await _teamRepository.CreateAsync(team);
+                await _playerRepository.CreateAsync(player);
                 return RedirectToAction(nameof(Index));
             }
-            return View(team);
+            return View(player);
         }
 
-        // GET: Teams/Edit/5
+        // GET: Players/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -72,23 +71,22 @@ namespace LigaNOS.Controllers
                 return NotFound();
             }
 
-            var team = await _teamRepository.GetByIdAsync(id.Value);
-            if (team == null)
+            var player = await _playerRepository.GetByIdAsync(id.Value);
+            if (player == null)
             {
                 return NotFound();
             }
-            return View(team);
+            return View(player);
         }
 
-        // POST: Teams/Edit/5
+        // POST: Players/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Team team)
+        public async Task<IActionResult> Edit(int id, Player player)
         {
-            //if (id != team.Id)
-            if (id != team.Id)
+            if (id != player.Id)
             {
                 return NotFound();
             }
@@ -97,12 +95,11 @@ namespace LigaNOS.Controllers
             {
                 try
                 {
-                    await _teamRepository.UpdateAsync(team);
+                    await _playerRepository.UpdateAsync(player);
                 }
-
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (! await _teamRepository.ExistAsync(team.Id))
+                    if (! await _playerRepository.ExistAsync(player.Id))
                     {
                         return NotFound();
                     }
@@ -110,14 +107,13 @@ namespace LigaNOS.Controllers
                     {
                         throw;
                     }
-                    
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(team);
+            return View(player);
         }
 
-        // GET: Teams/Delete/5
+        // GET: Players/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -125,22 +121,22 @@ namespace LigaNOS.Controllers
                 return NotFound();
             }
 
-            var team = await _teamRepository.GetByIdAsync(id.Value);
-            if (team == null)
+            var player = await _playerRepository.GetByIdAsync(id.Value);
+            if (player == null)
             {
                 return NotFound();
             }
 
-            return View(team);
+            return View(player);
         }
 
-        // POST: Teams/Delete/5
+        // POST: Players/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var team = await _teamRepository.GetByIdAsync(id);
-            await _teamRepository.DeleteAsync(team);
+            var player = await _playerRepository.GetByIdAsync(id);
+            await _playerRepository.DeleteAsync(player);
             return RedirectToAction(nameof(Index));
         }
     }
