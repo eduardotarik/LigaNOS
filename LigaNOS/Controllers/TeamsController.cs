@@ -23,7 +23,7 @@ namespace LigaNOS.Controllers
         // GET: Teams
         public IActionResult Index()
         {
-            return View(_teamRepository.GetAll());
+            return View(_teamRepository.GetAll().OrderBy(t => t.Name));
         }
 
         // GET: Teams/Details/5

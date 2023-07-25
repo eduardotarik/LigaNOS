@@ -1,16 +1,19 @@
 ﻿@model LigaNOS.Data.Entities.Game
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Edit";
 }
 
-<h1>Create</h1>
+<h1>Edit</h1>
 
 <h4>Game</h4>
 <hr />
+<div class="alert alert-danger alert-top" id="alertMessage" style="display:none;">
+    Home team and away team cannot be the same.
+</div>
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
+    <div class="col-md-4 form-container">
+        <form asp-action="Edit" id="editGameForm">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Date" class="control-label"></label>
@@ -18,14 +21,17 @@
                 <span asp-validation-for="Date" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="HomeTeam" class="control-label"></label>
-                <input asp-for="HomeTeam" class="form-control" />
-                <span asp-validation-for="HomeTeam" class="text-danger"></span>
+                <label asp-for="HomeTeam" class="control-label">Home Team</label>
+                <select asp-for="HomeTeam" asp-items="ViewBag.Teams" class="form-control">
+                    <option value="">Select a team</option>
+                </select>
             </div>
+
             <div class="form-group">
-                <label asp-for="AwayTeam" class="control-label"></label>
-                <input asp-for="AwayTeam" class="form-control" />
-                <span asp-validation-for="AwayTeam" class="text-danger"></span>
+                <label asp-for="AwayTeam" class="control-label">Away Team</label>
+                <select asp-for="AwayTeam" asp-items="ViewBag.Teams" class="form-control">
+                    <option value="">Select a team</option>
+                </select>
             </div>
             <div class="form-group">
                 <label asp-for="HomeTeamScore" class="control-label"></label>
@@ -43,16 +49,26 @@
                 </label>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Save" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-success">Back to List</a>
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        document.getElementById("editGameForm").addEventListener("submit", function (event) {
+            var homeTeamSelect = document.getElementById("HomeTeam");
+            var awayTeamSelect = document.getElementById("AwayTeam");
+
+            if (homeTeamSelect.value === awayTeamSelect.value) {
+                event.preventDefault();
+                document.getElementById("alertMessage").style.display = "block";
+            }
+        });
+    </script>
 }

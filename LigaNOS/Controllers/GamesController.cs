@@ -14,16 +14,19 @@ namespace LigaNOS.Controllers
     public class GamesController : Controller
     {
         private readonly IGameRepository _gameRepository;
+        private readonly ITeamRepository _teamRepository;
 
-        public GamesController(IGameRepository gameRepository)
+        public GamesController(IGameRepository gameRepository,
+            ITeamRepository teamRepository)
         {
             _gameRepository = gameRepository;
+            _teamRepository = teamRepository;
         }
 
         // GET: Games
         public IActionResult Index()
         {
-            return View(_gameRepository.GetAll());
+            return View(_gameRepository.GetAll().OrderBy(d => d.Date));
         }
 
         // GET: Games/Details/5
@@ -46,6 +49,15 @@ namespace LigaNOS.Controllers
         // GET: Games/Create
         public IActionResult Create()
         {
+            // Fetch all games from the database
+            var games = _gameRepository.GetAll().ToList();
+
+            // Get the list of team names from the games in-memory
+            var teamNames = games.SelectMany(g => new[] { g.HomeTeam, g.AwayTeam }).Distinct().ToList();
+
+            // Pass the list of team names to the view
+            ViewBag.Teams = new SelectList(teamNames);
+
             return View();
         }
 
@@ -61,8 +73,10 @@ namespace LigaNOS.Controllers
                 await _gameRepository.CreateAsync(game);
                 return RedirectToAction(nameof(Index));
             }
+            ViewBag.TeamNames = new SelectList(GetTeamNames());
             return View(game);
         }
+    
 
         // GET: Games/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -77,6 +91,12 @@ namespace LigaNOS.Controllers
             {
                 return NotFound();
             }
+
+            // Fetch the teams from the repository and populate the ViewBag.Teams
+            var teams = _teamRepository.GetAll().ToList();
+            ViewBag.Teams = new SelectList(teams, "Name", "Name", game.HomeTeam); // Pass the selected home team name
+            ViewBag.AwayTeams = new SelectList(teams, "Name", "Name", game.AwayTeam); // Pass the selected away team name
+
             return View(game);
         }
 
@@ -96,7 +116,7 @@ namespace LigaNOS.Controllers
             {
                 try
                 {
-                    _gameRepository.UpdateAsync(game);
+                    await _gameRepository.UpdateAsync(game);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -197,6 +217,13 @@ namespace LigaNOS.Controllers
             {
                 stats.Draws++;
             }
+        }
+
+        private List<string> GetTeamNames()
+        {
+            var teamNames = _gameRepository.GetAll().Select(g => g.HomeTeam).Distinct().ToList();
+            teamNames.AddRange(_gameRepository.GetAll().Select(g => g.AwayTeam).Distinct().ToList());
+            return teamNames.Distinct().ToList();
         }
     }
 }

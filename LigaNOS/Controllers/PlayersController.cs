@@ -13,16 +13,19 @@ namespace LigaNOS.Controllers
     public class PlayersController : Controller
     {
         private readonly IPlayerRepository _playerRepository;
+        private readonly ITeamRepository _teamRepository;
 
-        public PlayersController(IPlayerRepository playerRepository)
+        public PlayersController(IPlayerRepository playerRepository,
+            ITeamRepository teamRepository)
         {
             _playerRepository = playerRepository;
+            _teamRepository = teamRepository;
         }
 
         // GET: Players
         public IActionResult Index()
         {
-            return View(_playerRepository.GetAll());
+            return View(_playerRepository.GetAll().OrderBy(t => t.TeamName));
         }
 
         // GET: Players/Details/5
@@ -45,8 +48,13 @@ namespace LigaNOS.Controllers
         // GET: Players/Create
         public IActionResult Create()
         {
+            // Fetch the teams from the repository and populate the ViewBag.Teams
+            var teams = _teamRepository.GetAll().ToList();
+            ViewBag.Teams = new SelectList(teams, "Name", "Name");
+
             return View();
         }
+    
 
         // POST: Players/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
@@ -60,6 +68,10 @@ namespace LigaNOS.Controllers
                 await _playerRepository.CreateAsync(player);
                 return RedirectToAction(nameof(Index));
             }
+            // If the model is not valid, fetch the teams again and populate the ViewBag.Teams
+            var teams = _teamRepository.GetAll().ToList();
+            ViewBag.Teams = new SelectList(teams, "Name", "Name");
+
             return View(player);
         }
 
@@ -76,6 +88,11 @@ namespace LigaNOS.Controllers
             {
                 return NotFound();
             }
+
+            // Fetch the teams from the repository and populate the ViewBag.Teams
+            var teams = _teamRepository.GetAll().ToList();
+            ViewBag.Teams = new SelectList(teams, "Name", "Name");
+
             return View(player);
         }
 
@@ -110,6 +127,11 @@ namespace LigaNOS.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+
+            // If the model is not valid, fetch the teams again and populate the ViewBag.Teams
+            var teams = _teamRepository.GetAll().ToList();
+            ViewBag.Teams = new SelectList(teams, "Name", "Name");
+
             return View(player);
         }
 
