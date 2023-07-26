@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using LigaNOS.Data;
 using LigaNOS.Data.Entities;
+using LigaNOS.Helpers;
 
 namespace LigaNOS.Controllers
 {
@@ -14,12 +15,15 @@ namespace LigaNOS.Controllers
     {
         private readonly IPlayerRepository _playerRepository;
         private readonly ITeamRepository _teamRepository;
+        private readonly IUserHelper _userHelper;
 
         public PlayersController(IPlayerRepository playerRepository,
-            ITeamRepository teamRepository)
+            ITeamRepository teamRepository,
+            IUserHelper userHelper)
         {
             _playerRepository = playerRepository;
             _teamRepository = teamRepository;
+            _userHelper = userHelper;
         }
 
         // GET: Players
@@ -65,6 +69,9 @@ namespace LigaNOS.Controllers
         {
             if (ModelState.IsValid)
             {
+                //TODO: Change to the user that is logged
+                player.User = await _userHelper.GetUserByEmailAsync("eduardo@gmail.com");
+
                 await _playerRepository.CreateAsync(player);
                 return RedirectToAction(nameof(Index));
             }
@@ -112,6 +119,8 @@ namespace LigaNOS.Controllers
             {
                 try
                 {
+                    //TODO: Change to the user that is logged
+                    player.User = await _userHelper.GetUserByEmailAsync("eduardo@gmail.com");
                     await _playerRepository.UpdateAsync(player);
                 }
                 catch (DbUpdateConcurrencyException)

@@ -8,16 +8,20 @@ using Microsoft.EntityFrameworkCore;
 using LigaNOS.Data;
 using LigaNOS.Data.Entities;
 using System.Xml.Schema;
+using LigaNOS.Helpers;
 
 namespace LigaNOS.Controllers
 {
     public class TeamsController : Controller
     {
         private readonly ITeamRepository _teamRepository;
+        private readonly IUserHelper _userHelper;
 
-        public TeamsController(ITeamRepository teamRepository)
+        public TeamsController(ITeamRepository teamRepository,
+            IUserHelper userHelper)
         {
             _teamRepository = teamRepository;
+            _userHelper = userHelper;
         }
 
         // GET: Teams
@@ -58,6 +62,9 @@ namespace LigaNOS.Controllers
         {
             if (ModelState.IsValid)
             {
+                //TODO: Change to the user that is logged
+                team.User = await _userHelper.GetUserByEmailAsync("eduardo@gmail.com");
+
                 await _teamRepository.CreateAsync(team);
                 return RedirectToAction(nameof(Index));
             }
@@ -97,6 +104,8 @@ namespace LigaNOS.Controllers
             {
                 try
                 {
+                    //TODO: Change to the user that is logged
+                    team.User = await _userHelper.GetUserByEmailAsync("eduardo@gmail.com");
                     await _teamRepository.UpdateAsync(team);
                 }
 

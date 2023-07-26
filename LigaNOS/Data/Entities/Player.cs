@@ -19,6 +19,8 @@ namespace LigaNOS.Data.Entities
         [Required]
         [Display(Name = "Team Name")]
         public string TeamName { get; set; }
+
+        public CustomUser User { get; set; }
     }
 }
 

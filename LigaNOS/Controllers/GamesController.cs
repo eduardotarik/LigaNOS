@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using LigaNOS.Data;
 using LigaNOS.Data.Entities;
 using LigaNOS.Models;
+using LigaNOS.Helpers;
 
 namespace LigaNOS.Controllers
 {
@@ -15,12 +16,15 @@ namespace LigaNOS.Controllers
     {
         private readonly IGameRepository _gameRepository;
         private readonly ITeamRepository _teamRepository;
+        private readonly IUserHelper _userHelper;
 
         public GamesController(IGameRepository gameRepository,
-            ITeamRepository teamRepository)
+            ITeamRepository teamRepository,
+            IUserHelper userHelper)
         {
             _gameRepository = gameRepository;
             _teamRepository = teamRepository;
+            _userHelper = userHelper;
         }
 
         // GET: Games
@@ -70,6 +74,9 @@ namespace LigaNOS.Controllers
         {
             if (ModelState.IsValid)
             {
+                //TODO: Change to the user that is logged
+                game.User = await _userHelper.GetUserByEmailAsync("eduardo@gmail.com");
+
                 await _gameRepository.CreateAsync(game);
                 return RedirectToAction(nameof(Index));
             }
@@ -116,6 +123,8 @@ namespace LigaNOS.Controllers
             {
                 try
                 {
+                    //TODO: Change to the user that is logged
+                    game.User = await _userHelper.GetUserByEmailAsync("eduardo@gmail.com");
                     await _gameRepository.UpdateAsync(game);
                 }
                 catch (DbUpdateConcurrencyException)

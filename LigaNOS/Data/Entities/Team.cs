@@ -22,5 +22,7 @@ namespace LigaNOS.Data.Entities
         public string City { get; set; }
 
         public string Stadium { get; set; }
+
+        public CustomUser User { get; set; }
     }
 }
