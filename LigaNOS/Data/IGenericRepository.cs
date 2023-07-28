@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using LigaNOS.Data.Entities;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace LigaNOS.Data
@@ -8,6 +9,8 @@ namespace LigaNOS.Data
         IQueryable<T> GetAll();
 
         Task<T> GetByIdAsync(int id);
+
+        Task<Team> GetByNameAsync(string name);
 
         Task CreateAsync(T entity);
 

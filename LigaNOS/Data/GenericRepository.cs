@@ -27,6 +27,13 @@ namespace LigaNOS.Data
                 .FirstOrDefaultAsync(e => e.Id == id);
         }
 
+        public async Task<Team> GetByNameAsync(string name)
+        {
+            return await _context.Teams
+                .AsNoTracking()
+                .FirstOrDefaultAsync(t => t.Name == name);
+        }
+
         public async Task CreateAsync(T entity)
         {
             await _context.Set<T>().AddAsync(entity);

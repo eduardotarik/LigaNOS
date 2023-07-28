@@ -62,6 +62,14 @@ namespace LigaNOS.Controllers
         {
             if (ModelState.IsValid)
             {
+                // Check for duplicate team name
+                var existingTeam = await _teamRepository.GetByNameAsync(team.Name);
+                if (existingTeam != null)
+                {
+                    ModelState.AddModelError("Name", "A team with the same name already exists.");
+                    return View(team);
+                }
+
                 //TODO: Change to the user that is logged
                 team.User = await _userHelper.GetUserByEmailAsync("eduardo@gmail.com");
 
@@ -102,6 +110,15 @@ namespace LigaNOS.Controllers
 
             if (ModelState.IsValid)
             {
+                // Check for duplicate team name
+                var existingTeam = await _teamRepository.GetByNameAsync(team.Name);
+                if (existingTeam != null && existingTeam.Id != team.Id)
+                {
+                    ModelState.AddModelError("Name", "A team with the same name already exists.");
+                    return View(team);
+                }
+
+
                 try
                 {
                     //TODO: Change to the user that is logged
@@ -152,5 +169,6 @@ namespace LigaNOS.Controllers
             await _teamRepository.DeleteAsync(team);
             return RedirectToAction(nameof(Index));
         }
+
     }
 }
