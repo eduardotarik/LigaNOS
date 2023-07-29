@@ -18,12 +18,18 @@ namespace LigaNOS.Controllers
     {
         private readonly ITeamRepository _teamRepository;
         private readonly IUserHelper _userHelper;
+        private readonly IImageHelper _imageHelper;
+        private readonly IConverterHelper _converterHelper;
 
         public TeamsController(ITeamRepository teamRepository,
-            IUserHelper userHelper)
+            IUserHelper userHelper,
+            IImageHelper imageHelper,
+            IConverterHelper converterHelper)
         {
             _teamRepository = teamRepository;
             _userHelper = userHelper;
+            _imageHelper = imageHelper;
+            _converterHelper = converterHelper;
         }
 
         // GET: Teams
@@ -68,23 +74,10 @@ namespace LigaNOS.Controllers
 
                 if (model.ImageFile != null && model.ImageFile.Length > 0)
                 {
-                    var guid = Guid.NewGuid().ToString();
-                    var file = $"{guid}.jpg";
-
-                    path = Path.Combine(
-                        Directory.GetCurrentDirectory(),
-                        "wwwroot\\images\\emblems",
-                        file);
-
-                    using (var stream = new FileStream(path, FileMode.Create))
-                    {
-                        await model.ImageFile.CopyToAsync(stream);
-                    }
-
-                    path = $"~/images/emblems/{file}";
+                    path = await _imageHelper.UploadImageAsync(model.ImageFile, "emblems");
                 }
 
-                var team = this.ToTeam(model, path);
+                var team = _converterHelper.ToTeam(model, path, true);
 
                 // Check for duplicate team name
                 var existingTeam = await _teamRepository.GetByNameAsync(team.Name);
@@ -103,21 +96,6 @@ namespace LigaNOS.Controllers
             return View(model);
         }
 
-        private Team ToTeam(TeamViewModel model, string path)
-        {
-            return new Team
-            {
-                Id = model.Id,
-                Emblem = path,
-                Name = model.Name,
-                Founded = model.Founded,
-                Country = model.Country,
-                City = model.City,
-                Stadium = model.Stadium,
-                User = model.User,
-            };
-        }
-
         // GET: Teams/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -132,24 +110,9 @@ namespace LigaNOS.Controllers
                 return NotFound();
             }
 
-            var model = this.ToTeamViewModel(team);
+            var model = _converterHelper.ToTeamViewModel(team);
 
             return View(model);
-        }
-
-        private TeamViewModel ToTeamViewModel(Team team)
-        {
-            return new TeamViewModel
-            {
-                Id = team.Id,
-                Emblem = team.Emblem,
-                Name = team.Name,
-                Founded = team.Founded,
-                Country = team.Country,
-                City = team.City,
-                Stadium = team.Stadium,
-                User = team.User
-            };
         }
 
         // POST: Teams/Edit/5
@@ -180,23 +143,10 @@ namespace LigaNOS.Controllers
 
                     if (model.ImageFile != null && model.ImageFile.Length > 0)
                     {
-                        var guid = Guid.NewGuid().ToString();
-                        var file = $"{guid}.jpg";
-
-                        path = Path.Combine(
-                            Directory.GetCurrentDirectory(),
-                            "wwwroot\\images\\emblems",
-                            file);
-
-                        using (var stream = new FileStream(path, FileMode.Create))
-                        {
-                            await model.ImageFile.CopyToAsync(stream);
-                        }
-
-                        path = $"~/images/emblems/{file}";
+                        path = await _imageHelper.UploadImageAsync(model.ImageFile, "emblems");
                     }
 
-                    var team = this.ToTeam(model, path);
+                    var team = _converterHelper.ToTeam(model, path, false);
 
                     //TODO: Change to the user that is logged
                     team.User = await _userHelper.GetUserByEmailAsync("eduardo@gmail.com");

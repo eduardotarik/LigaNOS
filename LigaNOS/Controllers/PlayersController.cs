@@ -18,14 +18,20 @@ namespace LigaNOS.Controllers
         private readonly IPlayerRepository _playerRepository;
         private readonly ITeamRepository _teamRepository;
         private readonly IUserHelper _userHelper;
+        private readonly IImageHelper _imageHelper;
+        private readonly IConverterHelper _converterHelper;
 
         public PlayersController(IPlayerRepository playerRepository,
             ITeamRepository teamRepository,
-            IUserHelper userHelper)
+            IUserHelper userHelper,
+            IImageHelper imageHelper,
+            IConverterHelper converterHelper)
         {
             _playerRepository = playerRepository;
             _teamRepository = teamRepository;
             _userHelper = userHelper;
+            _imageHelper = imageHelper;
+            _converterHelper = converterHelper;
         }
 
         // GET: Players
@@ -75,23 +81,10 @@ namespace LigaNOS.Controllers
 
                 if (model.ImageFile != null && model.ImageFile.Length > 0)
                 {
-                    var guid = Guid.NewGuid().ToString();
-                    var file = $"{guid}.jpg";
-
-                    path = Path.Combine(
-                        Directory.GetCurrentDirectory(),
-                        "wwwroot\\images\\pictures",
-                        file);
-
-                    using (var stream = new FileStream(path, FileMode.Create))
-                    {
-                        await model.ImageFile.CopyToAsync(stream);
-                    }
-
-                    path = $"~/images/pictures/{file}";
+                    path = await _imageHelper.UploadImageAsync(model.ImageFile, "pictures");
                 }
 
-                var player = this.ToPlayer(model, path);
+                var player = _converterHelper.ToPlayer(model, path, true);
 
                 //TODO: Change to the user that is logged
                 player.User = await _userHelper.GetUserByEmailAsync("eduardo@gmail.com");
@@ -104,20 +97,6 @@ namespace LigaNOS.Controllers
             ViewBag.Teams = new SelectList(teams, "Name", "Name");
 
             return View(model);
-        }
-
-        private Player ToPlayer(PlayerViewModel model, string path)
-        {
-            return new Player
-            {
-                Id = model.Id,
-                Picture = path,
-                Name = model.Name,
-                Age = model.Age,
-                Position = model.Position,
-                TeamName = model.TeamName,
-                User = model.User,
-            };
         }
 
         // GET: Players/Edit/5
@@ -134,27 +113,13 @@ namespace LigaNOS.Controllers
                 return NotFound();
             }
 
-            var model = this.ToPlayerViewModel(player);
+            var model = _converterHelper.ToPlayerViewModel(player);
 
             // Fetch the teams from the repository and populate the ViewBag.Teams
             var teams = _teamRepository.GetAll().ToList();
             ViewBag.Teams = new SelectList(teams, "Name", "Name");
 
             return View(model);
-        }
-
-        private PlayerViewModel ToPlayerViewModel(Player player)
-        {
-            return new PlayerViewModel
-            {
-                Id = player.Id,
-                Picture = player.Picture,
-                Name = player.Name,
-                Age = player.Age,
-                Position = player.Position,
-                TeamName = player.TeamName,
-                User = player.User
-            };
         }
 
         // POST: Players/Edit/5
@@ -172,23 +137,10 @@ namespace LigaNOS.Controllers
 
                     if (model.ImageFile != null && model.ImageFile.Length > 0)
                     {
-                        var guid = Guid.NewGuid().ToString();
-                        var file = $"{guid}.jpg";
-
-                        path = Path.Combine(
-                            Directory.GetCurrentDirectory(),
-                            "wwwroot\\images\\pictures",
-                           file);
-
-                        using (var stream = new FileStream(path, FileMode.Create))
-                        {
-                            await model.ImageFile.CopyToAsync(stream);
-                        }
-
-                        path = $"~/images/emblems/{file}";
+                        path = await _imageHelper.UploadImageAsync(model.ImageFile, "pictures");
                     }
 
-                    var player = this.ToPlayer(model, path);
+                    var player = _converterHelper.ToPlayer(model, path, false);
 
                     //TODO: Change to the user that is logged
                     player.User = await _userHelper.GetUserByEmailAsync("eduardo@gmail.com");
