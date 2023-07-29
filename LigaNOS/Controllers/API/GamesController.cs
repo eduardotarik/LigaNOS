@@ -18,7 +18,7 @@ namespace LigaNOS.Controllers.API
         [HttpGet]
         public IActionResult GetGames()
         {
-            return Ok(_gameRepository.GetAll());
+            return Ok(_gameRepository.GetAllWithUsers());
         }
     }
 }

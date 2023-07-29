@@ -18,7 +18,7 @@ namespace LigaNOS.Controllers.API
         [HttpGet]
         public IActionResult GetTeams()
         {
-            return Ok(_teamRepository.GetAll());
+            return Ok(_teamRepository.GetAllWithUsers());
         }
     }
 }

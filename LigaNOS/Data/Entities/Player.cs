@@ -21,6 +21,19 @@ namespace LigaNOS.Data.Entities
         public string TeamName { get; set; }
 
         public CustomUser User { get; set; }
+
+        public string ImageFullPath
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(Picture))
+                {
+                    return null;
+                }
+
+                return $"https://localhost:44354{Picture.Substring(1)}";
+            }
+        }
     }
 }
 

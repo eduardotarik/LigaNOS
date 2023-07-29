@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -24,5 +25,18 @@ namespace LigaNOS.Data.Entities
         public string Stadium { get; set; }
 
         public CustomUser User { get; set; }
+
+        public string ImageFullPath
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(Emblem))
+                {
+                    return null;
+                }
+
+                return $"https://localhost:44354{Emblem.Substring(1)}";
+            }
+        }
     }
 }

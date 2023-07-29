@@ -53,15 +53,11 @@ namespace LigaNOS.Controllers
         // GET: Games/Create
         public IActionResult Create()
         {
-            // Fetch all games from the database
-            var games = _gameRepository.GetAll().ToList();
-
-            // Get the list of team names from the games in-memory
-            var teamNames = games.SelectMany(g => new[] { g.HomeTeam, g.AwayTeam }).Distinct().ToList();
+            // Get the list of team names from the team repository
+            var teams = _teamRepository.GetAll().ToList();
 
             // Pass the list of team names to the view
-            ViewBag.Teams = new SelectList(teamNames);
-
+            ViewBag.Teams = new SelectList(teams, "Name", "Name");
             return View();
         }
 

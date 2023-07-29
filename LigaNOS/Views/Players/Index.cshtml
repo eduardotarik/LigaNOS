@@ -34,7 +34,10 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Picture)
+                    @if (!string.IsNullOrEmpty(item.Picture))
+                    {
+                        <img src="@Url.Content(item.Picture)" alt="Emblem" style="width: 50px; height: 75px; max-width: 100%; height: auto ">
+                    }
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Name)

@@ -9,6 +9,8 @@ using LigaNOS.Data;
 using LigaNOS.Data.Entities;
 using System.Xml.Schema;
 using LigaNOS.Helpers;
+using LigaNOS.Models;
+using System.IO;
 
 namespace LigaNOS.Controllers
 {
@@ -58,16 +60,38 @@ namespace LigaNOS.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Team team)
+        public async Task<IActionResult> Create(TeamViewModel model)
         {
             if (ModelState.IsValid)
             {
+                var path = string.Empty;
+
+                if (model.ImageFile != null && model.ImageFile.Length > 0)
+                {
+                    var guid = Guid.NewGuid().ToString();
+                    var file = $"{guid}.jpg";
+
+                    path = Path.Combine(
+                        Directory.GetCurrentDirectory(),
+                        "wwwroot\\images\\emblems",
+                        file);
+
+                    using (var stream = new FileStream(path, FileMode.Create))
+                    {
+                        await model.ImageFile.CopyToAsync(stream);
+                    }
+
+                    path = $"~/images/emblems/{file}";
+                }
+
+                var team = this.ToTeam(model, path);
+
                 // Check for duplicate team name
                 var existingTeam = await _teamRepository.GetByNameAsync(team.Name);
                 if (existingTeam != null)
                 {
                     ModelState.AddModelError("Name", "A team with the same name already exists.");
-                    return View(team);
+                    return View(model); // Return the view with the validation error message
                 }
 
                 //TODO: Change to the user that is logged
@@ -76,7 +100,22 @@ namespace LigaNOS.Controllers
                 await _teamRepository.CreateAsync(team);
                 return RedirectToAction(nameof(Index));
             }
-            return View(team);
+            return View(model);
+        }
+
+        private Team ToTeam(TeamViewModel model, string path)
+        {
+            return new Team
+            {
+                Id = model.Id,
+                Emblem = path,
+                Name = model.Name,
+                Founded = model.Founded,
+                Country = model.Country,
+                City = model.City,
+                Stadium = model.Stadium,
+                User = model.User,
+            };
         }
 
         // GET: Teams/Edit/5
@@ -92,7 +131,25 @@ namespace LigaNOS.Controllers
             {
                 return NotFound();
             }
-            return View(team);
+
+            var model = this.ToTeamViewModel(team);
+
+            return View(model);
+        }
+
+        private TeamViewModel ToTeamViewModel(Team team)
+        {
+            return new TeamViewModel
+            {
+                Id = team.Id,
+                Emblem = team.Emblem,
+                Name = team.Name,
+                Founded = team.Founded,
+                Country = team.Country,
+                City = team.City,
+                Stadium = team.Stadium,
+                User = team.User
+            };
         }
 
         // POST: Teams/Edit/5
@@ -100,35 +157,54 @@ namespace LigaNOS.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Team team)
+        public async Task<IActionResult> Edit(TeamViewModel model)
         {
-            //if (id != team.Id)
-            if (id != team.Id)
-            {
-                return NotFound();
-            }
-
             if (ModelState.IsValid)
             {
                 // Check for duplicate team name
-                var existingTeam = await _teamRepository.GetByNameAsync(team.Name);
-                if (existingTeam != null && existingTeam.Id != team.Id)
+                var existingTeam = await _teamRepository.GetByNameAsync(model.Name);
+                if (existingTeam != null && existingTeam.Id != model.Id)
                 {
                     ModelState.AddModelError("Name", "A team with the same name already exists.");
-                    return View(team);
-                }
 
+                    // Fetch the teams again and populate the ViewBag.Teams
+                    var teams = _teamRepository.GetAll().ToList();
+                    ViewBag.Teams = new SelectList(teams, "Name", "Name");
+
+                    return View(model);
+                }
 
                 try
                 {
+                    var path = model.Emblem;
+
+                    if (model.ImageFile != null && model.ImageFile.Length > 0)
+                    {
+                        var guid = Guid.NewGuid().ToString();
+                        var file = $"{guid}.jpg";
+
+                        path = Path.Combine(
+                            Directory.GetCurrentDirectory(),
+                            "wwwroot\\images\\emblems",
+                            file);
+
+                        using (var stream = new FileStream(path, FileMode.Create))
+                        {
+                            await model.ImageFile.CopyToAsync(stream);
+                        }
+
+                        path = $"~/images/emblems/{file}";
+                    }
+
+                    var team = this.ToTeam(model, path);
+
                     //TODO: Change to the user that is logged
                     team.User = await _userHelper.GetUserByEmailAsync("eduardo@gmail.com");
                     await _teamRepository.UpdateAsync(team);
                 }
-
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (! await _teamRepository.ExistAsync(team.Id))
+                    if (!await _teamRepository.ExistAsync(model.Id))
                     {
                         return NotFound();
                     }
@@ -136,11 +212,15 @@ namespace LigaNOS.Controllers
                     {
                         throw;
                     }
-                    
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(team);
+
+            // If the model is not valid, fetch the teams again and populate the ViewBag.Teams
+            var teamsList = _teamRepository.GetAll().ToList();
+            ViewBag.Teams = new SelectList(teamsList, "Name", "Name", model.Name);
+
+            return View(model);
         }
 
         // GET: Teams/Delete/5

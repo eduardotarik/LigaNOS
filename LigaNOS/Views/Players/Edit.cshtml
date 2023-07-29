@@ -1,4 +1,4 @@
-﻿@model LigaNOS.Data.Entities.Player
+﻿@model LigaNOS.Models.PlayerViewModel
 
 @{
     ViewData["Title"] = "Edit";
@@ -10,13 +10,15 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit">
+        <form asp-action="Edit" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="Picture" />
+
             <div class="form-group">
-                <label asp-for="Picture" class="control-label"></label>
-                <input asp-for="Picture" class="form-control" />
-                <span asp-validation-for="Picture" class="text-danger"></span>
+                <label asp-for="ImageFile" class="control-label"></label>
+                <input asp-for="ImageFile" class="form-control" type="file" />
+                <span asp-validation-for="ImageFile" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
@@ -34,7 +36,7 @@
                 <span asp-validation-for="Position" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="TeamName" class="control-label">Away Team</label>
+                <label asp-for="TeamName" class="control-label">Team Name</label>
                 <select asp-for="TeamName" asp-items="ViewBag.Teams" class="form-control">
                     <option value="">Select a team</option>
                 </select>
@@ -44,6 +46,12 @@
                 <a asp-action="Index" class="btn btn-success">Back to List</a>
             </div>
         </form>
+    </div>
+    <div class="col-md-4">
+        @if (!string.IsNullOrEmpty(Model.Picture))
+        {
+            <img src="@Url.Content(Model.Picture)" alt="Picture" style="width: 300px; height: 450px; max-width: 100%; height: auto ">
+        }
     </div>
 </div>
 
