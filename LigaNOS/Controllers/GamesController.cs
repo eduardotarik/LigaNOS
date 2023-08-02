@@ -9,6 +9,7 @@ using LigaNOS.Data;
 using LigaNOS.Data.Entities;
 using LigaNOS.Models;
 using LigaNOS.Helpers;
+using Microsoft.AspNetCore.Authorization;
 
 namespace LigaNOS.Controllers
 {
@@ -51,6 +52,7 @@ namespace LigaNOS.Controllers
         }
 
         // GET: Games/Create
+        [Authorize]
         public IActionResult Create()
         {
             // Get the list of team names from the team repository
@@ -79,9 +81,10 @@ namespace LigaNOS.Controllers
             ViewBag.TeamNames = new SelectList(GetTeamNames());
             return View(game);
         }
-    
+
 
         // GET: Games/Edit/5
+        [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)

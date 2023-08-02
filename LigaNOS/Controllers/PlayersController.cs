@@ -1,6 +1,7 @@
 ﻿using LigaNOS.Data;
 using LigaNOS.Helpers;
 using LigaNOS.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace LigaNOS.Controllers
 {
+    [Authorize]
     public class PlayersController : Controller
     {
         private readonly IPlayerRepository _playerRepository;
