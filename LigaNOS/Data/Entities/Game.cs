@@ -26,7 +26,7 @@ namespace LigaNOS.Data.Entities
 
         public bool IsPlayed { get; set; }
 
-        public CustomUser User { get; set; }
+        public User User { get; set; }
 
     }
 }

@@ -9,7 +9,7 @@ namespace LigaNOS.Data.Entities
     {
         public int Id { get; set; }
 
-        public string Emblem { get; set; }
+        public Guid ImageId { get; set; }
 
         [Required]
         public string Name { get; set; }
@@ -24,19 +24,10 @@ namespace LigaNOS.Data.Entities
 
         public string Stadium { get; set; }
 
-        public CustomUser User { get; set; }
+        public User User { get; set; }
 
-        public string ImageFullPath
-        {
-            get
-            {
-                if (string.IsNullOrEmpty(Emblem))
-                {
-                    return null;
-                }
-
-                return $"https://localhost:44354{Emblem.Substring(1)}";
-            }
-        }
+        public string ImageFullPath => ImageId == Guid.Empty
+            ? $"https://liganos.azurewebsites.net/images/no_image.png"
+            : $"https://liganostorage.blob.core.windows.net/emblems/{ImageId}";
     }
 }

@@ -1,17 +1,18 @@
 ﻿using LigaNOS.Data.Entities;
 using LigaNOS.Models;
+using System;
 using System.IO;
 
 namespace LigaNOS.Helpers
 {
     public class ConverterHelper : IConverterHelper
     {
-        public Team ToTeam(TeamViewModel model, string path, bool isNew)
+        public Team ToTeam(TeamViewModel model, Guid imageId, bool isNew)
         {
             return new Team
             {
                 Id = isNew ? 0 : model.Id,
-                Emblem = path,
+                ImageId = imageId,
                 Name = model.Name,
                 Founded = model.Founded,
                 Country = model.Country,
@@ -26,7 +27,7 @@ namespace LigaNOS.Helpers
             return new TeamViewModel
             {
                 Id = team.Id,
-                Emblem = team.Emblem,
+                ImageId = team.ImageId,
                 Name = team.Name,
                 Founded = team.Founded,
                 Country = team.Country,
@@ -35,12 +36,12 @@ namespace LigaNOS.Helpers
                 User = team.User
             };
         }
-        public Player ToPlayer(PlayerViewModel model, string path, bool isNew)
+        public Player ToPlayer(PlayerViewModel model, Guid pictureId, bool isNew)
         {
             return new Player
             {
                 Id = isNew ? 0 : model.Id,
-                Picture = path,
+                PictureId = pictureId,
                 Name = model.Name,
                 Age = model.Age,
                 Position = model.Position,
@@ -54,7 +55,7 @@ namespace LigaNOS.Helpers
             return new PlayerViewModel
             {
                 Id = player.Id,
-                Picture = player.Picture,
+                PictureId = player.PictureId,
                 Name = player.Name,
                 Age = player.Age,
                 Position = player.Position,

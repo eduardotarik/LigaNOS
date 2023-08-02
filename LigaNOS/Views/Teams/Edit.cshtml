@@ -13,7 +13,7 @@
         <form asp-action="Edit" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
-            <input type="hidden" asp-for="Emblem" />
+            <input type="hidden" asp-for="ImageId" />
 
             <div class="form-group">
                 <label asp-for="ImageFile" class="control-label"></label>
@@ -23,7 +23,7 @@
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
                 <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span> <!-- This will display the validation error message -->
+                <span asp-validation-for="Name" class="text-danger"></span> 
             </div>
 
 
@@ -54,10 +54,7 @@
         </form>
     </div>
     <div class="col-md-4">
-        @if (!string.IsNullOrEmpty(Model.Emblem))
-        {
-            <img src="@Url.Content(Model.Emblem)" alt="Emblem" style="width: 300px; height: 450px; max-width: 100%; height: auto ">
-        }
+        <img src="@Url.Content(Model.ImageFullPath)" alt="Picture" style="width: 300px; height: 450px; max-width: 100%; height: auto ">
     </div>
 </div>
 

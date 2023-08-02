@@ -1,20 +1,13 @@
 using LigaNOS.Data;
-using LigaNOS.Data.Entities;
 using LigaNOS.Helpers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.SqlServer.Management.Smo;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
+using User = LigaNOS.Data.Entities.User;
 
 namespace LigaNOS
 {
@@ -30,7 +23,7 @@ namespace LigaNOS
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddIdentity<CustomUser, IdentityRole>(cfg =>
+            services.AddIdentity<User, IdentityRole>(cfg =>
             {
                 cfg.User.RequireUniqueEmail = true;
                 cfg.Password.RequireDigit = false;
@@ -49,9 +42,10 @@ namespace LigaNOS
 
             services.AddTransient<SeedDb>();
 
-            services.AddScoped<IUserHelper, UserHelper>();
             services.AddScoped<IImageHelper, ImageHelper>();
             services.AddScoped<IConverterHelper, ConverterHelper>();
+            services.AddScoped<IUserHelper, UserHelper>();
+            services.AddScoped<IBlobHelper, BlobHelper>();
 
             services.AddScoped<ITeamRepository, TeamRepository>();
             services.AddScoped<IGameRepository, GameRepository>();
@@ -73,6 +67,8 @@ namespace LigaNOS
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 

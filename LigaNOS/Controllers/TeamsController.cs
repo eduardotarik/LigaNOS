@@ -1,35 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using LigaNOS.Data;
+using LigaNOS.Helpers;
+using LigaNOS.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using LigaNOS.Data;
-using LigaNOS.Data.Entities;
-using System.Xml.Schema;
-using LigaNOS.Helpers;
-using LigaNOS.Models;
-using System.IO;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace LigaNOS.Controllers
 {
     public class TeamsController : Controller
     {
         private readonly ITeamRepository _teamRepository;
-        private readonly IUserHelper _userHelper;
-        private readonly IImageHelper _imageHelper;
+        private readonly IBlobHelper _blobHelper;
         private readonly IConverterHelper _converterHelper;
+        private readonly IUserHelper _userHelper;
 
         public TeamsController(ITeamRepository teamRepository,
-            IUserHelper userHelper,
-            IImageHelper imageHelper,
-            IConverterHelper converterHelper)
+            IBlobHelper blobHelper,
+            IConverterHelper converterHelper,
+            IUserHelper userHelper)
         {
             _teamRepository = teamRepository;
-            _userHelper = userHelper;
-            _imageHelper = imageHelper;
+            _blobHelper = blobHelper;
             _converterHelper = converterHelper;
+            _userHelper = userHelper;
         }
 
         // GET: Teams
@@ -70,14 +66,14 @@ namespace LigaNOS.Controllers
         {
             if (ModelState.IsValid)
             {
-                var path = string.Empty;
+                Guid imageId = Guid.Empty;
 
                 if (model.ImageFile != null && model.ImageFile.Length > 0)
                 {
-                    path = await _imageHelper.UploadImageAsync(model.ImageFile, "emblems");
+                    imageId = await _blobHelper.UploadBlobAsync(model.ImageFile, "emblems");
                 }
 
-                var team = _converterHelper.ToTeam(model, path, true);
+                var team = _converterHelper.ToTeam(model, imageId, true);
 
                 // Check for duplicate team name
                 var existingTeam = await _teamRepository.GetByNameAsync(team.Name);
@@ -139,14 +135,14 @@ namespace LigaNOS.Controllers
 
                 try
                 {
-                    var path = model.Emblem;
+                    Guid imageId = model.ImageId;
 
                     if (model.ImageFile != null && model.ImageFile.Length > 0)
                     {
-                        path = await _imageHelper.UploadImageAsync(model.ImageFile, "emblems");
+                        imageId = await _blobHelper.UploadBlobAsync(model.ImageFile, "emblems");
                     }
 
-                    var team = _converterHelper.ToTeam(model, path, false);
+                    var team = _converterHelper.ToTeam(model, imageId, false);
 
                     //TODO: Change to the user that is logged
                     team.User = await _userHelper.GetUserByEmailAsync("eduardo@gmail.com");

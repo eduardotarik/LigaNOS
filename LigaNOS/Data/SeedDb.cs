@@ -27,7 +27,7 @@ namespace LigaNOS.Data
             var user = await _userHelper.GetUserByEmailAsync("eduardo@gmail.com");
             if (user == null)
             {
-                user = new CustomUser
+                user = new User
                 {
                     FirstName = "Eduardo",
                     LastName = "Fernandes",
@@ -75,7 +75,7 @@ namespace LigaNOS.Data
             }
         }
 
-        private void AddTeam(string name, string country, string city, string stadium, CustomUser user)
+        private void AddTeam(string name, string country, string city, string stadium, User user)
         {
             _context.Teams.Add(new Team
             {
@@ -88,7 +88,7 @@ namespace LigaNOS.Data
             });
         }
 
-        private void AddGame(int homeTeamScore, int awayTeamScore, DateTime dateTime, CustomUser user)
+        private void AddGame(int homeTeamScore, int awayTeamScore, DateTime dateTime, User user)
         {
             // Pick two random team names from the list of existing teams
             string[] teamNames = _context.Teams.Select(t => t.Name).ToArray();
@@ -114,7 +114,7 @@ namespace LigaNOS.Data
             });
         }
 
-        private void AddPlayer(string name, int age, string position, string teamName, CustomUser user)
+        private void AddPlayer(string name, int age, string position, string teamName, User user)
         {
             var team = _context.Teams.FirstOrDefault(t => t.Name == teamName);
 

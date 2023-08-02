@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using LigaNOS.Data;
+using LigaNOS.Helpers;
+using LigaNOS.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using LigaNOS.Data;
-using LigaNOS.Data.Entities;
-using LigaNOS.Helpers;
-using LigaNOS.Models;
-using System.IO;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace LigaNOS.Controllers
 {
@@ -17,21 +14,21 @@ namespace LigaNOS.Controllers
     {
         private readonly IPlayerRepository _playerRepository;
         private readonly ITeamRepository _teamRepository;
-        private readonly IUserHelper _userHelper;
-        private readonly IImageHelper _imageHelper;
+        private readonly IBlobHelper _blobHelper;
         private readonly IConverterHelper _converterHelper;
+        private readonly IUserHelper _userHelper;
 
         public PlayersController(IPlayerRepository playerRepository,
             ITeamRepository teamRepository,
-            IUserHelper userHelper,
-            IImageHelper imageHelper,
-            IConverterHelper converterHelper)
+            IBlobHelper blobHelper,
+            IConverterHelper converterHelper,
+            IUserHelper userHelper)
         {
             _playerRepository = playerRepository;
             _teamRepository = teamRepository;
-            _userHelper = userHelper;
-            _imageHelper = imageHelper;
+            _blobHelper = blobHelper;
             _converterHelper = converterHelper;
+            _userHelper = userHelper;
         }
 
         // GET: Players
@@ -66,7 +63,7 @@ namespace LigaNOS.Controllers
 
             return View();
         }
-    
+
 
         // POST: Players/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
@@ -77,18 +74,17 @@ namespace LigaNOS.Controllers
         {
             if (ModelState.IsValid)
             {
-                var path = string.Empty;
+                Guid pictureId = Guid.Empty;
 
                 if (model.ImageFile != null && model.ImageFile.Length > 0)
                 {
-                    path = await _imageHelper.UploadImageAsync(model.ImageFile, "pictures");
+                    pictureId = await _blobHelper.UploadBlobAsync(model.ImageFile, "pictures");
                 }
 
-                var player = _converterHelper.ToPlayer(model, path, true);
+                var player = _converterHelper.ToPlayer(model, pictureId, true);
 
                 //TODO: Change to the user that is logged
                 player.User = await _userHelper.GetUserByEmailAsync("eduardo@gmail.com");
-
                 await _playerRepository.CreateAsync(player);
                 return RedirectToAction(nameof(Index));
             }
@@ -133,14 +129,14 @@ namespace LigaNOS.Controllers
             {
                 try
                 {
-                    var path = model.Picture;
+                    Guid pictureId = model.PictureId;
 
                     if (model.ImageFile != null && model.ImageFile.Length > 0)
                     {
-                        path = await _imageHelper.UploadImageAsync(model.ImageFile, "pictures");
+                        pictureId = await _blobHelper.UploadBlobAsync(model.ImageFile, "pictures");
                     }
 
-                    var player = _converterHelper.ToPlayer(model, path, false);
+                    var player = _converterHelper.ToPlayer(model, pictureId, false);
 
                     //TODO: Change to the user that is logged
                     player.User = await _userHelper.GetUserByEmailAsync("eduardo@gmail.com");
@@ -148,7 +144,7 @@ namespace LigaNOS.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (! await _playerRepository.ExistAsync(model.Id))
+                    if (!await _playerRepository.ExistAsync(model.Id))
                     {
                         return NotFound();
                     }

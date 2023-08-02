@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace LigaNOS.Data.Entities
 {
@@ -6,7 +7,7 @@ namespace LigaNOS.Data.Entities
     {
         public int Id { get; set; }
 
-        public string Picture { get; set; }
+        public Guid PictureId{ get; set; }
 
         [Required]
         public string Name { get; set; }
@@ -20,20 +21,12 @@ namespace LigaNOS.Data.Entities
         [Display(Name = "Team Name")]
         public string TeamName { get; set; }
 
-        public CustomUser User { get; set; }
+        public User User { get; set; }
 
-        public string ImageFullPath
-        {
-            get
-            {
-                if (string.IsNullOrEmpty(Picture))
-                {
-                    return null;
-                }
+        public string ImageFullPath => PictureId == Guid.Empty
+            ? $"https://liganos.azurewebsites.net/images/no_image.png"
+            : $"https://liganostorage.blob.core.windows.net/pictures/{PictureId}";
 
-                return $"https://localhost:44354{Picture.Substring(1)}";
-            }
-        }
     }
 }
 
