@@ -1,0 +1,31 @@
+﻿@model List<UserWithRolesViewModel>
+
+<h2>User List</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Roles</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var userWithRoles in Model)
+        {
+            var user = userWithRoles.User;
+            var roles = userWithRoles.Roles;
+            <tr>
+                <td>@user.UserName</td>
+                <td>@user.Email</td>
+                <td>
+                    @string.Join(", ", roles)
+                </td>
+                <td>
+                    <a asp-action="Delete" asp-controller="Account" asp-route-userId="@user.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

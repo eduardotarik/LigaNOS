@@ -9,6 +9,7 @@ namespace LigaNOS.Data.Entities
     {
         public int Id { get; set; }
 
+        [Display(Name = "Emblem")]
         public Guid ImageId { get; set; }
 
         [Required]

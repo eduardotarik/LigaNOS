@@ -12,6 +12,8 @@ namespace LigaNOS.Data
 
         public DbSet<Game> Games { get; set; }
 
+        public DbSet<User> users { get; set; }
+
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
         }

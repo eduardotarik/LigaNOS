@@ -10,6 +10,7 @@ using LigaNOS.Data.Entities;
 using LigaNOS.Models;
 using LigaNOS.Helpers;
 using Microsoft.AspNetCore.Authorization;
+using User = Microsoft.SqlServer.Management.Smo.User;
 
 namespace LigaNOS.Controllers
 {
@@ -84,7 +85,7 @@ namespace LigaNOS.Controllers
 
 
         // GET: Games/Edit/5
-        [Authorize]
+        [RoleAuthorization("Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -143,6 +144,7 @@ namespace LigaNOS.Controllers
         }
 
         // GET: Games/Delete/5
+        [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)

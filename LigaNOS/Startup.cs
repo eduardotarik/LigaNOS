@@ -7,6 +7,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.Net;
+using System.Net.Mail;
 using User = LigaNOS.Data.Entities.User;
 
 namespace LigaNOS
@@ -33,7 +35,8 @@ namespace LigaNOS
                 cfg.Password.RequireNonAlphanumeric = false;
                 cfg.Password.RequiredLength = 6;
             })
-                .AddEntityFrameworkStores<DataContext>();
+                .AddEntityFrameworkStores<DataContext>()
+                .AddDefaultTokenProviders();
 
             services.AddDbContext<DataContext>(cfg =>
             {
@@ -52,6 +55,8 @@ namespace LigaNOS
             services.AddScoped<IPlayerRepository, PlayerRepository>();
 
             services.AddControllersWithViews();
+
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

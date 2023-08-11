@@ -7,6 +7,7 @@ namespace LigaNOS.Data.Entities
     {
         public int Id { get; set; }
 
+        [Display(Name = "Picture")]
         public Guid PictureId{ get; set; }
 
         [Required]

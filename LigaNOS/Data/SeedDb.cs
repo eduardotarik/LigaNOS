@@ -1,6 +1,7 @@
 ﻿using LigaNOS.Data.Entities;
 using LigaNOS.Helpers;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.VisualBasic;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -24,6 +25,10 @@ namespace LigaNOS.Data
         {
             await _context.Database.EnsureCreatedAsync();
 
+            await _userHelper.CheckRoleAsync("Admin");
+            await _userHelper.CheckRoleAsync("Team");
+            await _userHelper.CheckRoleAsync("Staff");
+
             var user = await _userHelper.GetUserByEmailAsync("eduardo@gmail.com");
             if (user == null)
             {
@@ -41,6 +46,15 @@ namespace LigaNOS.Data
                 {
                     throw new InvalidOperationException("Could not create the user in seeder");
                 }
+
+                await _userHelper.AddUserToRoleAsync(user, "Admin");
+                
+            }
+
+            var isInRole = await _userHelper.IsUserInRoleAsync(user, "Admin");
+            if (!isInRole)
+            {
+                await _userHelper.AddUserToRoleAsync(user, "Admin");
             }
 
             if (!_context.Teams.Any())

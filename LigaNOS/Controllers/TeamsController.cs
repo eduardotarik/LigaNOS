@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace LigaNOS.Controllers
 {
-    [Authorize]
+    [RoleAuthorization("Admin")]
     public class TeamsController : Controller
     {
         private readonly ITeamRepository _teamRepository;
@@ -54,6 +54,7 @@ namespace LigaNOS.Controllers
         }
 
         // GET: Teams/Create
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             return View();
