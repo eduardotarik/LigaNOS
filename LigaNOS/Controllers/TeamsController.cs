@@ -87,7 +87,7 @@ namespace LigaNOS.Controllers
                 }
 
                 //TODO: Change to the user that is logged
-                team.User = await _userHelper.GetUserByEmailAsync("eduardo@gmail.com");
+                team.User = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
 
                 await _teamRepository.CreateAsync(team);
                 return RedirectToAction(nameof(Index));
@@ -148,7 +148,7 @@ namespace LigaNOS.Controllers
                     var team = _converterHelper.ToTeam(model, imageId, false);
 
                     //TODO: Change to the user that is logged
-                    team.User = await _userHelper.GetUserByEmailAsync("eduardo@gmail.com");
+                    team.User = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
                     await _teamRepository.UpdateAsync(team);
                 }
                 catch (DbUpdateConcurrencyException)

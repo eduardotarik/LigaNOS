@@ -74,7 +74,7 @@ namespace LigaNOS.Controllers
             if (ModelState.IsValid)
             {
                 //TODO: Change to the user that is logged
-                game.User = await _userHelper.GetUserByEmailAsync("eduardo@gmail.com");
+                game.User = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
 
                 await _gameRepository.CreateAsync(game);
                 return RedirectToAction(nameof(Index));
@@ -124,7 +124,7 @@ namespace LigaNOS.Controllers
                 try
                 {
                     //TODO: Change to the user that is logged
-                    game.User = await _userHelper.GetUserByEmailAsync("eduardo@gmail.com");
+                    game.User = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
                     await _gameRepository.UpdateAsync(game);
                 }
                 catch (DbUpdateConcurrencyException)

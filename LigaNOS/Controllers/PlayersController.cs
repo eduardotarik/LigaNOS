@@ -86,7 +86,7 @@ namespace LigaNOS.Controllers
                 var player = _converterHelper.ToPlayer(model, pictureId, true);
 
                 //TODO: Change to the user that is logged
-                player.User = await _userHelper.GetUserByEmailAsync("eduardo@gmail.com");
+                player.User = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
                 await _playerRepository.CreateAsync(player);
                 return RedirectToAction(nameof(Index));
             }
@@ -141,7 +141,7 @@ namespace LigaNOS.Controllers
                     var player = _converterHelper.ToPlayer(model, pictureId, false);
 
                     //TODO: Change to the user that is logged
-                    player.User = await _userHelper.GetUserByEmailAsync("eduardo@gmail.com");
+                    player.User = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
                     await _playerRepository.UpdateAsync(player);
                 }
                 catch (DbUpdateConcurrencyException)

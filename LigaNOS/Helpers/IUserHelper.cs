@@ -29,5 +29,9 @@ namespace LigaNOS.Helpers
         Task<User> GetUserByIdAsync(string userId);
 
         Task<List<User>> GetAllUsersAsync();
+
+        Task<IdentityResult> UpdateUserAsync(User user);
+
+        Task<IdentityResult> ChangePasswordAsync(User user, string oldPassword, string newPassword);
     }
 }

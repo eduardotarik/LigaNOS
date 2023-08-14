@@ -98,5 +98,15 @@ namespace LigaNOS.Helpers
         {
             return await Task.FromResult(_userManager.Users.ToList());
         }
+
+        public async Task<IdentityResult> UpdateUserAsync(User user)
+        {
+            return await _userManager.UpdateAsync(user);
+        }
+
+        public async Task<IdentityResult> ChangePasswordAsync(User user, string oldPassword, string newPassword)
+        {
+            return await _userManager.ChangePasswordAsync(user, oldPassword, newPassword);
+        }
     }
 }
