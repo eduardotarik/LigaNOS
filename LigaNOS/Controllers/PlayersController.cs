@@ -3,6 +3,7 @@ using LigaNOS.Helpers;
 using LigaNOS.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -11,7 +12,6 @@ using System.Threading.Tasks;
 
 namespace LigaNOS.Controllers
 {
-    [Authorize]
     public class PlayersController : Controller
     {
         private readonly IPlayerRepository _playerRepository;
@@ -44,13 +44,13 @@ namespace LigaNOS.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return View("PlayerNotFound");
             }
 
             var player = await _playerRepository.GetByIdAsync(id.Value);
             if (player == null)
             {
-                return NotFound();
+                return View("PlayerNotFound");
             }
 
             return View(player);
@@ -102,13 +102,13 @@ namespace LigaNOS.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return View("PlayerNotFound");
             }
 
             var player = await _playerRepository.GetByIdAsync(id.Value);
             if (player == null)
             {
-                return NotFound();
+                return View("PlayerNotFound");
             }
 
             var model = _converterHelper.ToPlayerViewModel(player);
@@ -170,13 +170,13 @@ namespace LigaNOS.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return View("PlayerNotFound");
             }
 
             var player = await _playerRepository.GetByIdAsync(id.Value);
             if (player == null)
             {
-                return NotFound();
+                return View("PlayerNotFound");
             }
 
             return View(player);
@@ -190,6 +190,11 @@ namespace LigaNOS.Controllers
             var player = await _playerRepository.GetByIdAsync(id);
             await _playerRepository.DeleteAsync(player);
             return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult PlayerNotFound()
+        {
+            return View();
         }
     }
 }

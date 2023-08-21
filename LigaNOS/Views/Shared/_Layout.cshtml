@@ -5,7 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - LigaNOS</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Monoton&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Monoton&family=Press+Start+2P&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/lib/font-awesome/css/all.min.css" />
+    
 
 </head>
 <body>
@@ -39,8 +43,8 @@
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle text-dark" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-expanded="false">Admin</a>
                                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <li><a class="dropdown-item" asp-area="" asp-controller="Account" asp-action="Create">Create</a></li>
-                                    <li><a class="dropdown-item" asp-area="" asp-controller="Account" asp-action="Userlist">Userlist</a></li>
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="Account" asp-action="Create">Create user</a></li>
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="Account" asp-action="Userlist">User list</a></li>
                                 </ul>
                             </li>
                         }
@@ -70,7 +74,7 @@
         </nav>
     </header>
     <div class="container">
-        <main role="main" class="pb-3">
+        <main role="main" class="pb-3 mb-5">
             @RenderBody()
         </main>
     </div>

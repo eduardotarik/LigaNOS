@@ -24,7 +24,14 @@ namespace LigaNOS.Data.Entities
         [Display(Name = "Away Score")]
         public int? AwayTeamScore { get; set; }
 
+        [Display(Name = "Played")]
         public bool IsPlayed { get; set; }
+
+        [Display(Name = "Home")]
+        public string? HomeTeamIssuedCard { get; set; }
+
+        [Display(Name = "Away")]
+        public string? AwayTeamIssuedCard { get; set; }
 
         public User User { get; set; }
 

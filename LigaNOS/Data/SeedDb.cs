@@ -12,12 +12,16 @@ namespace LigaNOS.Data
     {
         private readonly DataContext _context;
         private readonly IUserHelper _userHelper;
+        private readonly RoleManager<IdentityRole> _roleManager;
         private Random _random;
 
-        public SeedDb(DataContext context, IUserHelper userHelper)
+        public SeedDb(DataContext context,
+            IUserHelper userHelper,
+            RoleManager<IdentityRole> roleManager)
         {
             _context = context;
             _userHelper = userHelper;
+            _roleManager = roleManager;
             _random = new Random();
         }
 
@@ -48,7 +52,9 @@ namespace LigaNOS.Data
                 }
 
                 await _userHelper.AddUserToRoleAsync(user, "Admin");
-                
+                var token = await _userHelper.GenerateEmailConfirmationTokenAsync(user);
+                await _userHelper.ConfirmEmailAsync(user, token);
+
             }
 
             var isInRole = await _userHelper.IsUserInRoleAsync(user, "Admin");

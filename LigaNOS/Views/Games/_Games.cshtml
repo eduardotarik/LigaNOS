@@ -28,6 +28,26 @@
     <input asp-for="AwayTeamScore" class="form-control" />
     <span asp-validation-for="AwayTeamScore" class="text-danger"></span>
 </div>
+<div class="form-group">
+    <label for="HomeTeamIssuedCard">Home Cards</label>
+    <select class="form-control" asp-for="HomeTeamIssuedCard">
+        <option value="">Select card</option>
+        <option value="RedYellow" selected="@(Model.HomeTeamIssuedCard == "RedYellow")">Red and Yellow Cards</option>
+        <option value="Red" selected="@(Model.HomeTeamIssuedCard == "Red")">Red Card</option>
+        <option value="Yellow" selected="@(Model.HomeTeamIssuedCard == "Yellow")">Yellow Card</option>
+    </select>
+</div>
+
+<div class="form-group">
+    <label for="AwayTeamIssuedCard">Away Cards</label>
+    <select class="form-control" asp-for="AwayTeamIssuedCard">
+        <option value="">Select card</option>
+        <option value="RedYellow" selected="@(Model.AwayTeamIssuedCard == "RedYellow")">Red and Yellow Cards</option>
+        <option value="Red" selected="@(Model.AwayTeamIssuedCard == "Red")">Red Card</option>
+        <option value="Yellow" selected="@(Model.AwayTeamIssuedCard == "Yellow")">Yellow Card</option>
+    </select>
+</div>
+
 <div class="form-group form-check">
     <label class="form-check-label">
         <input class="form-check-input" asp-for="IsPlayed" /> @Html.DisplayNameFor(model => model.IsPlayed)

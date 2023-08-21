@@ -7,7 +7,10 @@
 <h1>List of Games</h1>
 
 <p>
-    <a asp-action="Create" class="btn btn-primary">Create New</a>
+    @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin"))
+    {
+        <a asp-action="Create" class="btn btn-primary"><i class="fa-solid fa-plus"></i></a>
+    }
 </p>
 <table class="table table-bordered table-striped" style="width: 100%">
     <thead>
@@ -30,6 +33,13 @@
             <th>
                 @Html.DisplayNameFor(model => model.IsPlayed)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.HomeTeamIssuedCard)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AwayTeamIssuedCard)
+            </th>
+
             <th></th>
         </tr>
     </thead>
@@ -54,10 +64,54 @@
             <td>
                 @Html.DisplayFor(modelItem => item.IsPlayed)
             </td>
+                <td>
+                    @if (!string.IsNullOrEmpty(item.HomeTeamIssuedCard))
+                    {
+                        <span class="text-danger">
+                            @if (item.HomeTeamIssuedCard == "Red")
+                            {
+                                <i class="fas fa-square text-danger"></i> <!-- Red card icon -->
+                            }
+                            else if (item.HomeTeamIssuedCard == "Yellow")
+                            {
+                                <i class="fas fa-square text-warning"></i> <!-- Yellow card icon -->
+                            }
+                            else if (item.HomeTeamIssuedCard == "RedYellow")
+                            {
+                                <i class="fas fa-square text-danger"></i> <!-- Red card icon -->
+                                <i class="fas fa-square text-warning"></i> <!-- Yellow card icon -->
+                            }
+                        </span>
+                    }
+                </td>
+                <td>
+                    @if (!string.IsNullOrEmpty(item.HomeTeamIssuedCard))
+                    {
+                        <span class="text-danger">
+                            @if (item.AwayTeamIssuedCard == "Red")
+                            {
+                                <i class="fas fa-square text-danger"></i> <!-- Red card icon -->
+                            }
+                            else if (item.AwayTeamIssuedCard == "Yellow")
+                            {
+                                <i class="fas fa-square text-warning"></i> <!-- Yellow card icon -->
+                            }
+                            else if (item.AwayTeamIssuedCard == "RedYellow")
+                            {
+                                <i class="fas fa-square text-danger"></i> <!-- Red card icon -->
+                                <i class="fas fa-square text-warning"></i> <!-- Yellow card icon -->
+                            }
+                        </span>
+                    }
+                </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary">Edit</a>
-                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Details</a>
-                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>
+                @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin"))
+                {
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary"><i class="fa-solid fa-pen-to-square"></i></a>
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger"><i class="fa fa-trash"></i></a>
+                }
+                
+                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info"><i class="fa-solid fa-circle-info"></i></a>
             </td>
         </tr>
 }

@@ -40,28 +40,29 @@ namespace LigaNOS.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return View("GameNotFound");
             }
 
             var game = await _gameRepository.GetByIdAsync(id.Value);
             if (game == null)
             {
-                return NotFound();
+                return View("GameNotFound");
             }
 
             return View(game);
         }
 
         // GET: Games/Create
-        [Authorize]
         public IActionResult Create()
         {
-            // Get the list of team names from the team repository
-            var teams = _teamRepository.GetAll().ToList();
+            var newGame = new Game();
+            newGame.Date = DateTime.Today; // Set a default date for testing
 
-            // Pass the list of team names to the view
+            var teams = _teamRepository.GetAll().ToList();
             ViewBag.Teams = new SelectList(teams, "Name", "Name");
-            return View();
+            
+
+            return View(newGame);
         }
 
         // POST: Games/Create
@@ -85,18 +86,17 @@ namespace LigaNOS.Controllers
 
 
         // GET: Games/Edit/5
-        [RoleAuthorization("Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
             {
-                return NotFound();
+                return View("GameNotFound");
             }
 
             var game = await _gameRepository.GetByIdAsync(id.Value);
             if (game == null)
             {
-                return NotFound();
+                return View("GameNotFound");
             }
 
             // Fetch the teams from the repository and populate the ViewBag.Teams
@@ -144,18 +144,17 @@ namespace LigaNOS.Controllers
         }
 
         // GET: Games/Delete/5
-        [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
             {
-                return NotFound();
+                return View("GameNotFound");
             }
 
             var game = await _gameRepository.GetByIdAsync(id.Value);
             if (game == null)
             {
-                return NotFound();
+                return View("GameNotFound");
             }
 
             return View(game);
@@ -235,5 +234,50 @@ namespace LigaNOS.Controllers
             teamNames.AddRange(_gameRepository.GetAll().Select(g => g.AwayTeam).Distinct().ToList());
             return teamNames.Distinct().ToList();
         }
+
+        [HttpPost]
+        public async Task<IActionResult> IssueCard(int gameId, string cardType, string team)
+        {
+            var game = await _gameRepository.GetByIdAsync(gameId);
+
+            if (game == null)
+            {
+                // Game not found, handle error
+                return NotFound();
+            }
+
+            if (team == "Home")
+            {
+                if (cardType == "Red")
+                {
+                    game.HomeTeamIssuedCard = "Red";
+                }
+                else if (cardType == "Yellow")
+                {
+                    game.HomeTeamIssuedCard = "Yellow";
+                }
+            }
+            else if (team == "Away")
+            {
+                if (cardType == "Red")
+                {
+                    game.AwayTeamIssuedCard = "Red";
+                }
+                else if (cardType == "Yellow")
+                {
+                    game.AwayTeamIssuedCard = "Yellow";
+                }
+            }
+
+            await _gameRepository.UpdateAsync(game);
+
+            return RedirectToAction("Index");
+        }
+
+        public IActionResult GameNotFound()
+        {
+            return View();
+        }
+
     }
 }

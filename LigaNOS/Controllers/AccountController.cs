@@ -7,8 +7,14 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
+using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 using User = LigaNOS.Data.Entities.User;
 
@@ -18,19 +24,25 @@ namespace LigaNOS.Controllers
     public class AccountController : Controller
     {
         private readonly IUserHelper _userHelper;
+        private readonly IMailHelper _mailHelper;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly DataContext _context;
         private readonly UserManager<User> _userManager;
+        private readonly IConfiguration _configuration;
 
         public AccountController(IUserHelper userHelper,
+            IMailHelper mailHelper,
             RoleManager<IdentityRole> roleManager,
             DataContext context,
-            UserManager<User> userManager)
+            UserManager<User> userManager,
+            IConfiguration configuration)
         {
             _userHelper = userHelper;
+            _mailHelper = mailHelper;
             _roleManager = roleManager;
             _context = context;
             _userManager = userManager;
+            _configuration = configuration;
         }
 
         public IActionResult Login()
@@ -114,9 +126,48 @@ namespace LigaNOS.Controllers
 
                 if (result.Succeeded)
                 {
-                    // User created successfully
-                    // Redirect or show a success message
-                    return RedirectToAction("Index", "Home"); // Redirect to the desired page
+                    // Check if the selected role exists
+                    var roleExists = await _roleManager.RoleExistsAsync(model.SelectedRole);
+                    if (!roleExists)
+                    {
+                        // If the role doesn't exist, create the role
+                        await _roleManager.CreateAsync(new IdentityRole(model.SelectedRole));
+                    }
+
+                    // Add the user to the selected role
+                    await _userHelper.AddUserToRoleAsync(user, model.SelectedRole);
+
+
+                    // Generate email confirmation token
+                    var emailConfirmationToken = await _userHelper.GenerateEmailConfirmationTokenAsync(user);
+
+                    // Create confirmation link
+                    var confirmationLink = Url.Action("ConfirmEmail", "Account", new
+                    {
+                        userId = user.Id,
+                        token = emailConfirmationToken
+                    }, protocol: HttpContext.Request.Scheme);
+
+                    // Send confirmation email
+                    string myToken = await _userHelper.GenerateEmailConfirmationTokenAsync(user);
+                    string tokenLink = Url.Action("ConfirmEmail", "Account", new
+                    {
+                        userId = user.Id,
+                        token = myToken
+                    }, protocol: HttpContext.Request.Scheme);
+
+                    Response response = await _mailHelper.SendEmail(user.Email, "Email confirmation",
+                        $"<h1>Email Confirmation</h1>To allow the user, please click in this link: </br></br><a href=\"{tokenLink}\">Confirm Email</a>");
+
+                    if (response.IsSuccess)
+                    {
+                        TempData["EmailConfirmationMessage"] = "Email confirmation link has been sent to the user's email.";
+                        return RedirectToAction("Create", "Account");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, "Failed to send confirmation email.");
+                    }
                 }
                 else
                 {
@@ -130,8 +181,7 @@ namespace LigaNOS.Controllers
             }
 
             // Repopulate the roles dropdown in case of validation errors
-            var roles = await _roleManager.Roles.ToListAsync();
-            ViewBag.Roles = new SelectList(roles, "Name", "Name");
+            ViewBag.Roles = new SelectList(await _roleManager.Roles.ToListAsync(), "Name", "Name");
             return View(model);
         }
 
@@ -270,6 +320,75 @@ namespace LigaNOS.Controllers
             }
 
             return this.View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateToken([FromBody] LoginViewModel model)
+        {
+            if (this.ModelState.IsValid)
+            {
+                var user = await _userHelper.GetUserByEmailAsync(model.Username);
+                if (user != null)
+                {
+                    var result = await _userHelper.ValidatePasswordAsync(
+                        user,
+                        model.Password);
+
+                    if (result.Succeeded)
+                    {
+                        var claims = new[]
+                        {
+                            new Claim(JwtRegisteredClaimNames.Sub, user.Email),
+                            new Claim(JwtRegisteredClaimNames.Jti, Guid .NewGuid().ToString())
+                        };
+
+                        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Tokens:Key"]));
+                        var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+                        var token = new JwtSecurityToken(
+                            _configuration["Tokens:Issuer"],
+                            _configuration["Tokens:Audience"],
+                            claims,
+                            expires: DateTime.UtcNow.AddDays(15),
+                            signingCredentials: credentials);
+                        var results = new
+                        {
+                            token = new JwtSecurityTokenHandler().WriteToken(token),
+                            expiration = token.ValidTo
+                        };
+
+                        return this.Created(string.Empty, results);
+                    }
+                }
+            }
+
+            return BadRequest();
+        }
+
+        public async Task<IActionResult> ConfirmEmail(string userId, string token)
+        {
+            if (string.IsNullOrWhiteSpace(userId) || string.IsNullOrEmpty(token))
+            {
+                return NotFound();
+            }
+
+            var user = await _userHelper.GetUserByIdAsync(userId);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var result = await _userHelper.ConfirmEmailAsync(user, token);
+            if (!result.Succeeded)
+            {
+                return NotFound();
+            }
+
+            return View();
+        }
+
+        public IActionResult NotAuthorized()
+        {
+            return View();
         }
     }
 }

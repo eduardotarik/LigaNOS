@@ -61,6 +61,7 @@ html {
 body {
   /* Margin bottom by footer height */
   margin-bottom: 60px;
+  margin: 0;
 }
 .footer {
   position: absolute;
@@ -69,3 +70,241 @@ body {
   white-space: nowrap;
   line-height: 60px; /* Vertically center the text there */
 }
+
+/* Forbidden
+-------------------------------------------------- */
+.forbidden-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 80vh; /* Set the container height to 100vh */
+    padding: 20px;
+    box-sizing: border-box;
+    background-color: rgba(255, 255, 255, 0.9);
+    overflow: hidden;
+}
+
+.forbidden-img {
+    width: 200px;
+    height: auto;
+    max-width: 100%;
+}
+
+/* Style the forbidden text */
+.acccess-denied-text {
+    margin-top: 10px;
+    color: red;
+    font-weight: bold;
+}
+
+@media screen and (max-width: 768px) {
+    .forbidden-container {
+        min-height: calc(80vh - 60px); /* Adjust for the footer height */
+    }
+
+    /* Adjust image size for smaller screens */
+    .forbidden-img {
+        width: 150px;
+    }
+
+    /* Adjust text size for smaller screens */
+    .forbidden-text {
+        font-size: 16px;
+    }
+
+}
+
+.forbidden-text {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 50px;
+    color: #624569;
+}
+
+@media screen and (max-width: 768px) {
+    /* Adjust text size for smaller screens */
+    .forbidden-text {
+        font-size: 30px;
+    }
+}
+
+/* Team Not Found
+-------------------------------------------------- */
+.team-not-found-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 80vh;
+    padding: 20px;
+    box-sizing: border-box;
+    background-color: rgba(255, 255, 255, 0.9);
+    overflow: hidden;
+}
+
+.team-not-found-img {
+    width: 200px;
+    height: auto;
+    max-width: 100%;
+}
+
+@media screen and (max-width: 768px) {
+    .team-not-found-container {
+        min-height: calc(80vh - 60px);
+    }
+
+
+    .team-not-found-img {
+        width: 150px;
+    }
+}
+
+
+.team-not-found-text {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 50px;
+    color: #624569;
+}
+
+@media screen and (max-width: 768px) {
+    /* Adjust text size for smaller screens */
+    .team-not-found-text {
+        font-size: 20px;
+    }
+}
+
+/* Page Not Found
+-------------------------------------------------- */
+.page-not-found-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 80vh;
+    padding: 20px;
+    box-sizing: border-box;
+    background-color: rgba(255, 255, 255, 0.9);
+    overflow: hidden;
+}
+
+.page-not-found-img {
+    width: 200px;
+    height: auto;
+    max-width: 100%;
+}
+
+@media screen and (max-width: 768px) {
+    .page-not-found-container {
+        min-height: calc(80vh - 60px);
+    }
+
+
+    .page-not-found-img {
+        width: 150px;
+    }
+}
+
+
+.page-not-found-text {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 50px;
+    color: #624569;
+}
+
+@media screen and (max-width: 768px) {
+    /* Adjust text size for smaller screens */
+    .page-not-found-text {
+        font-size: 20px;
+    }
+}
+
+/* Player Not Found
+-------------------------------------------------- */
+.player-not-found-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 80vh;
+    padding: 20px;
+    box-sizing: border-box;
+    background-color: rgba(255, 255, 255, 0.9);
+    overflow: hidden;
+}
+
+.player-not-found-img {
+    width: 200px;
+    height: auto;
+    max-width: 100%;
+}
+
+@media screen and (max-width: 768px) {
+    .player-not-found-container {
+        min-height: calc(80vh - 60px);
+    }
+
+
+    .player-not-found-img {
+        width: 150px;
+    }
+}
+
+
+.player-not-found-text {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 50px;
+    color: #624569;
+}
+
+@media screen and (max-width: 768px) {
+    /* Adjust text size for smaller screens */
+    .player-not-found-text {
+        font-size: 20px;
+    }
+}
+
+/* Game Not Found
+-------------------------------------------------- */
+.game-not-found-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 80vh;
+    padding: 20px;
+    box-sizing: border-box;
+    background-color: rgba(255, 255, 255, 0.9);
+    overflow: hidden;
+}
+
+.game-not-found-img {
+    width: 200px;
+    height: auto;
+    max-width: 100%;
+}
+
+@media screen and (max-width: 768px) {
+    .game-not-found-container {
+        min-height: calc(80vh - 60px);
+    }
+
+
+    .game-not-found-img {
+        width: 150px;
+    }
+}
+
+
+.game-not-found-text-1 {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 50px;
+    color: #624569;
+}
+
+@media screen and (max-width: 768px) {
+    /* Adjust text size for smaller screens */
+    .game-not-found-text-1 {
+        font-size: 20px;
+    }
+}
+

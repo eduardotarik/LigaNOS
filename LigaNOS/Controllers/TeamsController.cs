@@ -11,7 +11,6 @@ using System.Threading.Tasks;
 
 namespace LigaNOS.Controllers
 {
-    [RoleAuthorization("Admin")]
     public class TeamsController : Controller
     {
         private readonly ITeamRepository _teamRepository;
@@ -41,20 +40,20 @@ namespace LigaNOS.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return View("TeamNotFound");
             }
 
             var team = await _teamRepository.GetByIdAsync(id.Value);
             if (team == null)
             {
-                return NotFound();
+                return View("TeamNotFound");
             }
 
             return View(team);
         }
 
         // GET: Teams/Create
-        [Authorize(Roles = "Admin")]
+        [Authorize]
         public IActionResult Create()
         {
             return View();
@@ -100,13 +99,13 @@ namespace LigaNOS.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return View("TeamNotFound");
             }
 
             var team = await _teamRepository.GetByIdAsync(id.Value);
             if (team == null)
             {
-                return NotFound();
+                return View("TeamNotFound");
             }
 
             var model = _converterHelper.ToTeamViewModel(team);
@@ -177,13 +176,13 @@ namespace LigaNOS.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return View("TeamNotFound");
             }
 
             var team = await _teamRepository.GetByIdAsync(id.Value);
             if (team == null)
             {
-                return NotFound();
+                return View("TeamNotFound");
             }
 
             return View(team);
@@ -199,5 +198,9 @@ namespace LigaNOS.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        public IActionResult TeamNotFound()
+        {
+            return View();
+        }
     }
 }

@@ -7,7 +7,10 @@
 <h1>List of Players</h1>
 
 <p>
-    <a asp-action="Create" class="btn btn-primary">Create New</a>
+    @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin"))
+    {
+        <a asp-action="Create" class="btn btn-primary"><i class="fa-solid fa-plus"></i></a>
+    }
 </p>
 <table class="table table-bordered table-striped" style="width: 100%">
     <thead>
@@ -52,9 +55,13 @@
                 @Html.DisplayFor(modelItem => item.TeamName)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary">Edit</a>
-                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Details</a>
-                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>
+                    @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin"))
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary"><i class="fa-solid fa-pen-to-square"></i></a>
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger"><i class="fa fa-trash"></i></a>
+                    }
+
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info"><i class="fa-solid fa-circle-info"></i></a>
             </td>
         </tr>
 }

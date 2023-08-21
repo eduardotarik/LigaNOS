@@ -29,6 +29,9 @@ namespace LigaNOS.Migrations
                     b.Property<string>("AwayTeam")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("AwayTeamIssuedCard")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int?>("AwayTeamScore")
                         .IsRequired()
                         .HasColumnType("int");
@@ -37,6 +40,9 @@ namespace LigaNOS.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("HomeTeam")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("HomeTeamIssuedCard")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("HomeTeamScore")

@@ -20,12 +20,16 @@
                 <td>@user.UserName</td>
                 <td>@user.Email</td>
                 <td>
-                    @string.Join(", ", roles)
+                    @roles.FirstOrDefault()
                 </td>
                 <td>
-                    <a asp-action="Delete" asp-controller="Account" asp-route-userId="@user.Id">Delete</a>
+                    <form asp-controller="Account" asp-action="Delete" method="post">
+                        <input type="hidden" name="userId" value="@user.Id" />
+                        <button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
+                    </form>
                 </td>
             </tr>
         }
+
     </tbody>
 </table>
