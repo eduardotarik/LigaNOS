@@ -196,8 +196,11 @@ namespace LigaNOS.Controllers
 
             foreach (var game in games)
             {
-                UpdateTeamStatistics(teamStats, game.HomeTeam, game.HomeTeamScore, game.AwayTeamScore);
-                UpdateTeamStatistics(teamStats, game.AwayTeam, game.AwayTeamScore, game.HomeTeamScore);
+                if (game.IsPlayed) // Consider statistics only for played games
+                {
+                    UpdateTeamStatistics(teamStats, game.HomeTeam, game.HomeTeamScore, game.AwayTeamScore, game.IsPlayed);
+                    UpdateTeamStatistics(teamStats, game.AwayTeam, game.AwayTeamScore, game.HomeTeamScore, game.IsPlayed);
+                }
             }
 
             // Sort the team statistics by points in descending order
@@ -206,7 +209,7 @@ namespace LigaNOS.Controllers
             return sortedTeamStats;
         }
 
-        private void UpdateTeamStatistics(Dictionary<string, TeamStatisticsViewModel> teamStats, string teamName, int? scoredGoals, int? concededGoals)
+        private void UpdateTeamStatistics(Dictionary<string, TeamStatisticsViewModel> teamStats, string teamName, int? scoredGoals, int? concededGoals, bool isPlayed)
         {
             if (!teamStats.ContainsKey(teamName))
             {
@@ -216,20 +219,28 @@ namespace LigaNOS.Controllers
             var stats = teamStats[teamName];
 
             stats.TotalGames++;
-            stats.GoalsFor += scoredGoals ?? 0;
-            stats.GoalsAgainst += concededGoals ?? 0;
 
-            if (scoredGoals > concededGoals)
+            if (isPlayed)
             {
-                stats.Wins++;
-            }
-            else if (scoredGoals < concededGoals)
-            {
-                stats.Losses++;
-            }
-            else
-            {
-                stats.Draws++;
+                // Check if both scoredGoals and concededGoals are not null before updating
+                if (scoredGoals.HasValue && concededGoals.HasValue)
+                {
+                    stats.GoalsFor += scoredGoals.Value;
+                    stats.GoalsAgainst += concededGoals.Value;
+
+                    if (scoredGoals > concededGoals)
+                    {
+                        stats.Wins++;
+                    }
+                    else if (scoredGoals < concededGoals)
+                    {
+                        stats.Losses++;
+                    }
+                    else
+                    {
+                        stats.Draws++;
+                    }
+                } 
             }
         }
 
@@ -305,6 +316,7 @@ namespace LigaNOS.Controllers
                             Date = DateTime.Today.AddDays(new Random().Next(1, 30)), // Set a random date
                             HomeTeamScore = null, // Set a default score
                             AwayTeamScore = null, // Set a default score
+                            IsPlayed = false,
                         };
 
                         await _gameRepository.CreateAsync(game);
