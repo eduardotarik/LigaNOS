@@ -207,11 +207,21 @@ namespace LigaNOS.Controllers
 
             if (user != null)
             {
+                // Check if the user is an admin and if there is only one admin user remaining
+                if (await _userManager.IsInRoleAsync(user, "Admin") && await _userHelper.GetAdminUserCountAsync() <= 1)
+                {
+                    // Set error message
+                    TempData["AdminDeleteErrorMessage"] = "Cannot delete the only remaining admin user.";
+                    return RedirectToAction("UserList", "Account"); // Redirect to the UserList action
+                }
+
                 var result = await _userHelper.DeleteUserAsync(user);
 
                 if (result.Succeeded)
                 {
-                    return RedirectToAction("Index", "Home"); // Redirect to the desired page
+                    // Set success message
+                    TempData["AdminDeletedMessage"] = "Admin user deleted successfully.";
+                    return RedirectToAction("UserList", "Account"); // Redirect to the UserList action
                 }
                 else
                 {
@@ -229,6 +239,8 @@ namespace LigaNOS.Controllers
             // Redirect back to the Delete view with the user's details
             return View("Delete", user);
         }
+
+
 
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UserList()
