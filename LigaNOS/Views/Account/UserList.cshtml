@@ -2,6 +2,20 @@
 
 <h2>User List</h2>
 
+@if (TempData.ContainsKey("AdminDeletedMessage"))
+{
+    <div class="alert alert-success">
+        @TempData["AdminDeletedMessage"]
+    </div>
+}
+
+@if (TempData.ContainsKey("AdminDeleteErrorMessage"))
+{
+    <div class="alert alert-danger">
+        @TempData["AdminDeleteErrorMessage"]
+    </div>
+}
+
 <table class="table table-bordered table-striped" style="width: 100%">
     <thead>
         <tr>

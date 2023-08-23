@@ -1,6 +1,7 @@
 ﻿using LigaNOS.Data.Entities;
 using LigaNOS.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.SqlServer.Management.Smo;
 using System.Collections.Generic;
 using System.Linq;
@@ -48,6 +49,11 @@ namespace LigaNOS.Helpers
 
         public async Task<User> GetUserByEmailAsync(string email)
         {
+            if (string.IsNullOrEmpty(email))
+            {
+                return null;
+            }
+
             return await _userManager.FindByEmailAsync(email);
         }
 
@@ -126,5 +132,15 @@ namespace LigaNOS.Helpers
         {
             return await _userManager.ConfirmEmailAsync(user, token);
         }
+
+        public async Task<int> GetAdminUserCountAsync()
+        {
+            var users = await _userManager.Users.ToListAsync(); // Retrieve all users
+
+            var adminCount = users.Count(u => _userManager.IsInRoleAsync(u, "Admin").Result);
+
+            return adminCount;
+        }
+
     }
 }
