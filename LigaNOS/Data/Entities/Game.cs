@@ -2,6 +2,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
+
 namespace LigaNOS.Data.Entities
 {
     public class Game : IEntity
@@ -16,11 +17,9 @@ namespace LigaNOS.Data.Entities
         [Display(Name = "Away Team")]
         public string AwayTeam { get; set; }
 
-        [Required]
         [Display(Name = "Home Score")]
         public int? HomeTeamScore { get; set; }
 
-        [Required]
         [Display(Name = "Away Score")]
         public int? AwayTeamScore { get; set; }
 
@@ -33,7 +32,24 @@ namespace LigaNOS.Data.Entities
         [Display(Name = "Away")]
         public string? AwayTeamIssuedCard { get; set; }
 
+        public SeasonStatus Status { get; set; }
+
         public User User { get; set; }
 
+        public enum SeasonStatus
+        {
+            NotStarted, // Season has not started
+            Active,     // Season is active
+            Ended       // Season has ended
+        }
+
+        public GameStatus Stat { get; set; }
+
+        public enum GameStatus
+        {
+            NotStarted, // Season has not started
+            Active,     // Season is active
+            Ended       // Season has ended
+        }
     }
 }

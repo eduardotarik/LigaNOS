@@ -11,6 +11,7 @@ using LigaNOS.Models;
 using LigaNOS.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using User = Microsoft.SqlServer.Management.Smo.User;
+using static LigaNOS.Data.Entities.Game;
 
 namespace LigaNOS.Controllers
 {
@@ -32,7 +33,11 @@ namespace LigaNOS.Controllers
         // GET: Games
         public IActionResult Index()
         {
-            return View(_gameRepository.GetAll().OrderBy(d => d.Date));
+            var seasonStatus = CalculateSeasonStatus(); // Calculate the season status here
+            ViewBag.SeasonStatus = seasonStatus;
+
+            var games = _gameRepository.GetAll().OrderBy(d => d.Date).ToList();
+            return View(games);
         }
 
         // GET: Games/Details/5
@@ -279,5 +284,117 @@ namespace LigaNOS.Controllers
             return View();
         }
 
+        public async Task<IActionResult> GenerateSeasonGames()
+        {
+            var teams = _teamRepository.GetAll().ToList();
+
+            // Clear existing games
+            await _gameRepository.ClearGamesAsync();
+
+            // Generate games
+            foreach (var homeTeam in teams)
+            {
+                foreach (var awayTeam in teams)
+                {
+                    if (homeTeam.Id != awayTeam.Id)
+                    {
+                        var game = new Game
+                        {
+                            HomeTeam = homeTeam.Name,
+                            AwayTeam = awayTeam.Name,
+                            Date = DateTime.Today.AddDays(new Random().Next(1, 30)), // Set a random date
+                            HomeTeamScore = null, // Set a default score
+                            AwayTeamScore = null, // Set a default score
+                        };
+
+                        await _gameRepository.CreateAsync(game);
+                    }
+                }
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> StartSeason()
+        {
+            // Generate the season's games
+            await GenerateSeasonGames();
+
+            var games = await _gameRepository.GetAllAsync(); // Retrieve all games
+
+            foreach (var game in games)
+            {
+                game.Status = Game.SeasonStatus.Active; // Set the status to Active
+            }
+
+            await _gameRepository.SaveAllAsync(); // Save changes to the database
+
+            // Recalculate the season status and update the ViewBag
+            var seasonStatus = CalculateSeasonStatus();
+            ViewBag.SeasonStatus = seasonStatus;
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> EndSeason()
+        {
+            await _gameRepository.ClearGamesAsync();
+
+            var games = await _gameRepository.GetAllAsync();
+
+            foreach (var game in games)
+            {
+                game.Status = Game.SeasonStatus.Ended;
+                game.Stat = Game.GameStatus.Ended;
+            }
+
+            await _gameRepository.SaveAllAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        // POST: Games/ConfirmEndSeason
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ConfirmEndSeason()
+        {
+            // Clear existing games before marking them as ended
+            await _gameRepository.ClearGamesAsync();
+
+            var games = await _gameRepository.GetAllAsync();
+
+            foreach (var game in games)
+            {
+                game.Status = Game.SeasonStatus.Ended;
+                game.Stat = Game.GameStatus.Ended;
+            }
+
+            await _gameRepository.SaveAllAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        private SeasonStatus CalculateSeasonStatus()
+        {
+            // Get the current date
+            DateTime currentDate = DateTime.Now;
+
+            // Define your season start and end dates (placeholders)
+            DateTime seasonStartDate = new DateTime(2023, 9, 1); // Example start date
+            DateTime seasonEndDate = new DateTime(2024, 5, 31); // Example end date
+
+            if (currentDate < seasonStartDate)
+            {
+                return SeasonStatus.NotStarted; // Before the season starts
+            }
+            else if (currentDate >= seasonStartDate && currentDate <= seasonEndDate)
+            {
+                return SeasonStatus.Active; // In-season
+            }
+            else
+            {
+                return SeasonStatus.Ended; // After the season ends
+            }
+        }
     }
 }
