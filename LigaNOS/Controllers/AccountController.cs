@@ -285,16 +285,28 @@ namespace LigaNOS.Controllers
                 var user = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
                 if (user != null)
                 {
-                    user.FirstName = model.FirstName;
-                    user.LastName = model.LastName;
-                    var response = await _userHelper.UpdateUserAsync(user);
-                    if (response.Succeeded)
+                    bool hasChanges = user.FirstName != model.FirstName || user.LastName != model.LastName;
+
+                    if (hasChanges)
                     {
-                        ViewBag.UserMessage = "User updated!";
+                        user.FirstName = model.FirstName;
+                        user.LastName = model.LastName;
+                        var response = await _userHelper.UpdateUserAsync(user);
+                        if (response.Succeeded)
+                        {
+                            ViewBag.UserMessage = "User updated!";
+                            ViewBag.UserMessageColor = "text-success"; // Green color for success
+                        }
+                        else
+                        {
+                            ModelState.AddModelError(string.Empty, response.Errors.FirstOrDefault().Description);
+                            ViewBag.UserMessageColor = "text-danger"; // Red color for error
+                        }
                     }
                     else
                     {
-                        ModelState.AddModelError(string.Empty, response.Errors.FirstOrDefault().Description);
+                        ViewBag.UserMessage = "You need to change user info first!";
+                        ViewBag.UserMessageColor = "text-warning"; // Yellow color for info
                     }
                 }
             }

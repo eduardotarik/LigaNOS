@@ -9,13 +9,14 @@
 <p>
     @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin"))
     {
-        <a asp-action="Create" class="btn btn-primary"><i class="fa-solid fa-plus"></i></a>
+        <a asp-action="Create" class="btn btn-primary"><i class="fas fa-plus"></i> Create</a>
+
     }
 </p>
 <table class="table table-bordered table-striped" style="width: 100%">
     <thead>
         <tr>
-            <th>
+            <th style="text-align: center">
                 @Html.DisplayNameFor(model => model.ImageId)
             </th>
             <th>
@@ -42,7 +43,7 @@
             <td>
                 @if (!string.IsNullOrEmpty(item.ImageFullPath))
                 {
-                    <img src="@Url.Content(item.ImageFullPath)" alt="Emblem" style="width: 50px; height: 75px; max-width: 100%; height: auto ">
+                    <img src="@Url.Content(item.ImageFullPath)" alt="Emblem" style="display: block; margin: 0 auto; width: 30px; height: 30px; max-width: 100%; height: auto ">
                 }
             </td>
             <td>
