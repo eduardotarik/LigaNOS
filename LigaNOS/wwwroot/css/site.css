@@ -1,6 +1,10 @@
 ﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
 for details on configuring this project to bundle and minify static web assets. */
 
+.navbar {
+    background-color: #d31245;
+}
+
 a.navbar-brand {
   white-space: normal;
   text-align: center;
@@ -308,12 +312,55 @@ body {
     }
 }
 
-/* Table header centering
+/* Buttons placing
 -------------------------------------------------- */
-.table-container .player-header-center {
-    text-align: center;
+/* Teams button */
+.teams-header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px; /* Add some spacing between header and table */
 }
 
-.team-header-center {
-    text-align: center;
+.teams-title {
+    margin: 0;
+    font-size: 24px;
+}
+
+.teams-create-button {
+    margin: 0;
+}
+
+/* Games button */
+.games-header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px; /* Add some spacing between header and table */
+}
+
+.games-title {
+    margin: 0;
+    font-size: 24px;
+}
+
+.games-create-button {
+    margin: 0;
+}
+
+/* Players button */
+.players-header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px; /* Add some spacing between header and table */
+}
+
+.players-title {
+    margin: 0;
+    font-size: 24px;
+}
+
+.players-create-button {
+    margin: 0;
 }
