@@ -21,22 +21,20 @@
     }
 </script>
 
-<h1>List of Games</h1>
-
-<div class="d-flex justify-content-between align-items-center">
-    <div>
+<div class="games-header-content">
+    <h1 class="game-title">List of Games</h1>
+    <p class="games-create-button">
         <a asp-action="Create" class="btn btn-success"><i class="fas fa-plus"></i> Create Game</a>
-
         <button class="btn btn-danger" onclick="confirmEndSeason()"><i class="fas fa-minus"></i> End Season</button>
         <button class="btn btn-primary" onclick="confirmStartSeason()"><i class="fas fa-plus"></i> Start Season</button>
-    </div>
+    </p>
 </div>
 
 <div class="text-right mb-3">
     <!-- Optional: Other buttons or content aligned to the right -->
 </div>
 
-<table class="table table-bordered table-striped" style="width: 100%">
+<table id="games" class="table table-bordered table-striped" style="width: 100%">
     <thead>
         <tr>
             <th>

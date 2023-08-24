@@ -4,16 +4,17 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>List of Teams</h1>
+<div class="teams-header-content">
+    <h1 class="teams-title">List of Teams</h1>
+    <p class="teams-create-button">
+        @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin"))
+        {
+            <a asp-action="Create" class="btn btn-primary"><i class="fas fa-plus"></i> Create</a>
+        }
+    </p>
+</div>
 
-<p>
-    @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin"))
-    {
-        <a asp-action="Create" class="btn btn-primary"><i class="fas fa-plus"></i> Create</a>
-
-    }
-</p>
-<table class="table table-bordered table-striped" style="width: 100%">
+<table id="teams" class="table table-bordered table-striped" style="width: 100%">
     <thead>
         <tr>
             <th style="text-align: center">

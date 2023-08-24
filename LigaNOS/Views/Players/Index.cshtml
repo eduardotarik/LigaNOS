@@ -4,18 +4,19 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>List of Players</h1>
+<div class="players-header-content">
+    <h1 class="players-title">List of Players</h1>
+    <p class="players-create-button">
+        @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin"))
+        {
+            <a asp-action="Create" class="btn btn-primary"><i class="fas fa-plus"></i> Create</a>
 
-<p>
-    @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin"))
-    {
-        <a asp-action="Create" class="btn btn-primary"><i class="fas fa-plus"></i> Create</a>
-
-    }
-</p>
+        }
+    </p>
+ </div>
 
 
-<table class="table table-bordered table-striped" style="width: 100%">
+<table id="players" class="table table-bordered table-striped" style="width: 100%">
     <thead>
         <tr>
             <th style="text-align: center;">
