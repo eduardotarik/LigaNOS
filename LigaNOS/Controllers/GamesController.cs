@@ -33,9 +33,6 @@ namespace LigaNOS.Controllers
         // GET: Games
         public IActionResult Index()
         {
-            var seasonStatus = CalculateSeasonStatus(); // Calculate the season status here
-            ViewBag.SeasonStatus = seasonStatus;
-
             var games = _gameRepository.GetAll().OrderBy(d => d.Date).ToList();
             return View(games);
         }
@@ -179,11 +176,6 @@ namespace LigaNOS.Controllers
         public IActionResult Statistics()
         {
             var games = _gameRepository.GetAll().ToList();
-
-            if (games == null || games.Count == 0)
-            {
-                return View("Error");
-            }
 
             var statistics = CalculateStatistics(games);
 
@@ -341,10 +333,6 @@ namespace LigaNOS.Controllers
 
             await _gameRepository.SaveAllAsync(); // Save changes to the database
 
-            // Recalculate the season status and update the ViewBag
-            var seasonStatus = CalculateSeasonStatus();
-            ViewBag.SeasonStatus = seasonStatus;
-
             return RedirectToAction(nameof(Index));
         }
 
@@ -384,29 +372,6 @@ namespace LigaNOS.Controllers
             await _gameRepository.SaveAllAsync();
 
             return RedirectToAction(nameof(Index));
-        }
-
-        private SeasonStatus CalculateSeasonStatus()
-        {
-            // Get the current date
-            DateTime currentDate = DateTime.Now;
-
-            // Define your season start and end dates (placeholders)
-            DateTime seasonStartDate = new DateTime(2023, 9, 1); // Example start date
-            DateTime seasonEndDate = new DateTime(2024, 5, 31); // Example end date
-
-            if (currentDate < seasonStartDate)
-            {
-                return SeasonStatus.NotStarted; // Before the season starts
-            }
-            else if (currentDate >= seasonStartDate && currentDate <= seasonEndDate)
-            {
-                return SeasonStatus.Active; // In-season
-            }
-            else
-            {
-                return SeasonStatus.Ended; // After the season ends
-            }
         }
     }
 }

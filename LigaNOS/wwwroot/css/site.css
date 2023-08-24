@@ -308,3 +308,12 @@ body {
     }
 }
 
+/* Table header centering
+-------------------------------------------------- */
+.table-container .player-header-center {
+    text-align: center;
+}
+
+.team-header-center {
+    text-align: center;
+}
