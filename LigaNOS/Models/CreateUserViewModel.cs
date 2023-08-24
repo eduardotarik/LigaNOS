@@ -13,12 +13,14 @@ namespace LigaNOS.Models
         public string LastName { get; set; }
 
         [Required]
-        [Display(Name = "Username")]
+        [EmailAddress]
+        [Display(Name = "Email")]
         public string Username { get; set; }
 
         [Required]
-        [EmailAddress]
-        [Display(Name = "Email")]
+        [DataType(DataType.EmailAddress)]
+        [Display(Name = "Email Confirmation")]
+        [Compare("Username", ErrorMessage = "The emails must match.")]
         public string Email { get; set; }
 
         [Required]

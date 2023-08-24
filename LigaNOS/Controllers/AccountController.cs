@@ -106,14 +106,6 @@ namespace LigaNOS.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (model.Password != model.ConfirmPassword)
-                {
-                    ModelState.AddModelError("", "The password and confirmation password do not match.");
-                    var rolesList = await _roleManager.Roles.ToListAsync();
-                    ViewBag.Roles = new SelectList(rolesList, "Name", "Name");
-                    return View(model);
-                }
-
                 var user = new Data.Entities.User
                 {
                     UserName = model.Username,
