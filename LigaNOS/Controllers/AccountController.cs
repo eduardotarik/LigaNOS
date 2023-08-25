@@ -207,12 +207,32 @@ namespace LigaNOS.Controllers
                     return RedirectToAction("UserList", "Account"); // Redirect to the UserList action
                 }
 
+                var loggedInUser = await _userManager.GetUserAsync(User);
+
+                if (await _userManager.IsInRoleAsync(user, "Admin"))
+                {
+                    if (loggedInUser.Id == user.Id)
+                    {
+                        TempData["AdminDeleteErrorMessage"] = "You cannot delete yourself as an admin.";
+                        return RedirectToAction("UserList", "Account");
+                    }
+                }
+
+                var deletedUsername = user.UserName; // Store the username before deletion
+
                 var result = await _userHelper.DeleteUserAsync(user);
 
                 if (result.Succeeded)
                 {
-                    // Set success message
-                    TempData["AdminDeletedMessage"] = "Admin user deleted successfully.";
+                    if (await _userManager.IsInRoleAsync(user, "Admin"))
+                    {
+                        TempData["AdminDeletedMessage"] = $"Admin user '{deletedUsername}' deleted successfully.";
+                    }
+                    else
+                    {
+                        TempData["AdminDeletedMessage"] = $"User '{deletedUsername}' deleted successfully.";
+                    }
+
                     return RedirectToAction("UserList", "Account"); // Redirect to the UserList action
                 }
                 else
@@ -231,8 +251,6 @@ namespace LigaNOS.Controllers
             // Redirect back to the Delete view with the user's details
             return View("Delete", user);
         }
-
-
 
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UserList()
