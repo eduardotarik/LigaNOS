@@ -13,6 +13,7 @@ namespace LigaNOS.Data.Entities
         [Required]
         public string Name { get; set; }
 
+        [Range(0, int.MaxValue, ErrorMessage = "The value must be a non-negative number.")]
         public int Age { get; set; }
 
         [Required]

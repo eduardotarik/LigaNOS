@@ -2,8 +2,24 @@
 for details on configuring this project to bundle and minify static web assets. */
 
 .navbar {
-    background-color: #d31245;
+    background-color: #013440;
+    border: none !important;
+    height: 50px; /* Adjust the value as needed */
+    padding: 5px 0;
 }
+
+.navbar-nav .nav-item .nav-link {
+    color: #82C0D9;
+}
+
+a {
+    color: #038C17;
+}
+
+    a:hover {
+        color: #025918;
+        text-decoration: none;
+    }
 
 a.navbar-brand {
   white-space: normal;
@@ -11,9 +27,8 @@ a.navbar-brand {
   word-break: break-all;
 }
 
-/* Provide sufficient contrast against white background */
-a {
-  color: #0366d6;
+.navbar-nav .nav-link {
+    color: #038C17;
 }
 
 .btn-primary {
@@ -25,7 +40,7 @@ a {
 .nav-pills .nav-link.active, .nav-pills .show > .nav-link {
   color: #fff;
   background-color: #1b6ec2;
-  border-color: #1861ac;
+  border-color: #038C17;
 }
 
 /* Sticky footer styles
@@ -63,17 +78,23 @@ html {
 }
 
 body {
-  /* Margin bottom by footer height */
-  margin-bottom: 60px;
-  margin: 0;
+    /* Margin bottom by footer height */
+    margin-bottom: 60px;
+    margin: 0;
+    background-color: #025E73;
+    color: #82C0D9;
 }
 .footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  white-space: nowrap;
-  line-height: 60px; /* Vertically center the text there */
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    white-space: nowrap;
+    background-color: #013440;
+    border: none !important;
+    padding: 0;
 }
+
+
 
 /* Forbidden
 -------------------------------------------------- */
@@ -85,7 +106,6 @@ body {
     min-height: 80vh; /* Set the container height to 100vh */
     padding: 20px;
     box-sizing: border-box;
-    background-color: rgba(255, 255, 255, 0.9);
     overflow: hidden;
 }
 
@@ -122,7 +142,7 @@ body {
 .forbidden-text {
     font-family: 'Press Start 2P', cursive;
     font-size: 50px;
-    color: #624569;
+    color: #013440;
 }
 
 @media screen and (max-width: 768px) {
@@ -142,7 +162,6 @@ body {
     min-height: 80vh;
     padding: 20px;
     box-sizing: border-box;
-    background-color: rgba(255, 255, 255, 0.9);
     overflow: hidden;
 }
 
@@ -167,7 +186,7 @@ body {
 .team-not-found-text {
     font-family: 'Press Start 2P', cursive;
     font-size: 50px;
-    color: #624569;
+    color: #013440;
 }
 
 @media screen and (max-width: 768px) {
@@ -187,7 +206,6 @@ body {
     min-height: 80vh;
     padding: 20px;
     box-sizing: border-box;
-    background-color: rgba(255, 255, 255, 0.9);
     overflow: hidden;
 }
 
@@ -212,7 +230,7 @@ body {
 .page-not-found-text {
     font-family: 'Press Start 2P', cursive;
     font-size: 50px;
-    color: #624569;
+    color: #013440;
 }
 
 @media screen and (max-width: 768px) {
@@ -232,7 +250,6 @@ body {
     min-height: 80vh;
     padding: 20px;
     box-sizing: border-box;
-    background-color: rgba(255, 255, 255, 0.9);
     overflow: hidden;
 }
 
@@ -257,7 +274,7 @@ body {
 .player-not-found-text {
     font-family: 'Press Start 2P', cursive;
     font-size: 50px;
-    color: #624569;
+    color: #013440;
 }
 
 @media screen and (max-width: 768px) {
@@ -277,7 +294,6 @@ body {
     min-height: 80vh;
     padding: 20px;
     box-sizing: border-box;
-    background-color: rgba(255, 255, 255, 0.9);
     overflow: hidden;
 }
 
@@ -302,7 +318,7 @@ body {
 .game-not-found-text-1 {
     font-family: 'Press Start 2P', cursive;
     font-size: 50px;
-    color: #624569;
+    color: #013440;
 }
 
 @media screen and (max-width: 768px) {
@@ -363,4 +379,24 @@ body {
 
 .players-create-button {
     margin: 0;
+}
+
+/* Logo image
+-------------------------------------------------- */
+.logo-image {
+    width: 100px;
+    max-width: 100%;
+    height: auto;
+    margin-top: 5px;
+}
+
+/* Logo in footer */
+.logo-link {
+    display: inline-flex;
+    align-items: center;
+}
+
+.footer-logo-text {
+    margin-top: 3px;
+    margin-left: 5px;
 }

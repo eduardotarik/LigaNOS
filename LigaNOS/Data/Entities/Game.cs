@@ -18,9 +18,11 @@ namespace LigaNOS.Data.Entities
         public string AwayTeam { get; set; }
 
         [Display(Name = "Home Score")]
+        [Range(0, int.MaxValue, ErrorMessage = "The value must be a non-negative number.")]
         public int? HomeTeamScore { get; set; }
 
         [Display(Name = "Away Score")]
+        [Range(0, int.MaxValue, ErrorMessage = "The value must be a non-negative number.")]
         public int? AwayTeamScore { get; set; }
 
         [Display(Name = "Played")]
