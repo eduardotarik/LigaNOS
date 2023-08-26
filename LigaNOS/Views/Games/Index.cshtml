@@ -84,40 +84,45 @@
                             {
                                 if (item.HomeTeamIssuedCard == "Red")
                                 {
-                                    <i class="fas fa-square text-danger"></i> <!-- Red card icon -->
+                                    <img src="~/images/cards/redcard.png" alt="Red Card" class="red-card" />
                                 }
                                 else if (item.HomeTeamIssuedCard == "Yellow")
                                 {
-                                    <i class="fas fa-square text-warning"></i> <!-- Yellow card icon -->
+                                    <img src="~/images/cards/yellowcard.png" alt="Yellow Card" class="yellow-card" />
                                 }
                                 else if (item.HomeTeamIssuedCard == "RedYellow")
                                 {
-                                    <i class="fas fa-square text-danger"></i> <!-- Red card icon -->
-                                    <i class="fas fa-square text-warning"></i> <!-- Yellow card icon -->
+                                    <img src="~/images/cards/redcard.png" alt="Red Card" class="red-card" />
+                                    <img src="~/images/cards/yellowcard.png" alt="Yellow Card" class="red-yellow-card" />
                                 }
                             }
                         </span>
                         <br /> <!-- Line break to separate the cards for each team -->
+
                         <span class="text-danger">
                             @if (!string.IsNullOrEmpty(item.AwayTeamIssuedCard))
                             {
                                 if (item.AwayTeamIssuedCard == "Red")
                                 {
-                                    <i class="fas fa-square text-danger"></i> <!-- Red card icon -->
+                                    <img src="~/images/cards/redcard.png" alt="Red Card" class="red-card" />
                                 }
                                 else if (item.AwayTeamIssuedCard == "Yellow")
                                 {
-                                    <i class="fas fa-square text-warning"></i> <!-- Yellow card icon -->
+                                    <img src="~/images/cards/yellowcard.png" alt="Yellow Card" class="yellow-card" />
                                 }
                                 else if (item.AwayTeamIssuedCard == "RedYellow")
                                 {
-                                    <i class="fas fa-square text-danger"></i> <!-- Red card icon -->
-                                    <i class="fas fa-square text-warning"></i> <!-- Yellow card icon -->
+                                    <img src="~/images/cards/redcard.png" alt="Red Card" class="red-card" />
+                                    <img src="~/images/cards/yellowcard.png" alt="Yellow Card" class="red-yellow-card" />
                                 }
                             }
                         </span>
+                        <br />
                     </div>
                 </td>
+
+
+
                 <td>
                     @Html.DisplayFor(modelItem => item.IsPlayed)
                 </td>

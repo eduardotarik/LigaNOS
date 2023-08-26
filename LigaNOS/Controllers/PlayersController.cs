@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -63,6 +64,13 @@ namespace LigaNOS.Controllers
             var teams = _teamRepository.GetAll().ToList();
             ViewBag.Teams = new SelectList(teams, "Name", "Name");
 
+            ViewBag.Positions = new SelectList(new List<string>
+            {
+                "Goalkeeper", "Right Full-back", "Left Full-back", "Center-back",
+                "Sweeper", "Defensive Midfielder", "Right Midfielder (or Winger)", "Center Midfielder",
+                "Center Forward", "Attacking Midfielder", "Left Midfielder"
+            });
+
             return View();
         }
 
@@ -116,6 +124,13 @@ namespace LigaNOS.Controllers
             // Fetch the teams from the repository and populate the ViewBag.Teams
             var teams = _teamRepository.GetAll().ToList();
             ViewBag.Teams = new SelectList(teams, "Name", "Name");
+
+            ViewBag.Positions = new SelectList(new List<string>
+            {
+                "Goalkeeper", "Right Full-back", "Left Full-back", "Center-back",
+                "Sweeper", "Defensive Midfielder", "Right Midfielder (or Winger)", "Center Midfielder",
+                "Center Forward", "Attacking Midfielder", "Left Midfielder"
+            });
 
             return View(model);
         }

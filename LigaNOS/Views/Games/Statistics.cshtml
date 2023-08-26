@@ -5,6 +5,7 @@
 <table id="statistics">
     <thead>
         <tr>
+            <th>Rank</th>
             <th>Team Name</th>
             <th>GP</th>
             <th>W</th>
@@ -16,19 +17,19 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var teamStat in Model)
+        @for (int i = 0; i < Model.Count; i++)
         {
             <tr>
-                <td>@teamStat.TeamName</td>
-                <td>@teamStat.TotalGames</td>
-                <td>@teamStat.Wins</td>
-                <td>@teamStat.Draws</td>
-                <td>@teamStat.Losses</td>
-                <td>@teamStat.GoalsFor</td>
-                <td>@teamStat.GoalsAgainst</td>
-                <td>@teamStat.Points</td>
+                <td>@(i + 1)</td>
+                <td>@Model[i].TeamName</td>
+                <td>@Model[i].TotalGames</td>
+                <td>@Model[i].Wins</td>
+                <td>@Model[i].Draws</td>
+                <td>@Model[i].Losses</td>
+                <td>@Model[i].GoalsFor</td>
+                <td>@Model[i].GoalsAgainst</td>
+                <td>@Model[i].Points</td>
             </tr>
         }
     </tbody>
 </table>
-

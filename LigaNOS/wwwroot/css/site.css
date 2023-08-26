@@ -449,6 +449,11 @@ body {
     border-top: none; /* Remove top border for table header cells */
 }
 
+#games tbody tr:hover {
+    background-color: #013440;
+    color: #038C17;
+}
+
 
 /* Players row separation */
 #players {
@@ -470,6 +475,11 @@ body {
     border-top: none; /* Remove top border for table header cells */
 }
 
+#players tbody tr:hover {
+    background-color: #013440;
+    color: #038C17;
+}
+
 /* Teams row separation */
 #teams {
     border-collapse: collapse;
@@ -489,6 +499,11 @@ body {
 
 #teams th {
     border-top: none; /* Remove top border for table header cells */
+}
+
+#teams tbody tr:hover {
+    background-color: #013440;
+    color: #038C17;
 }
 
 /* Statistics table styling */
@@ -536,6 +551,32 @@ table thead th {
     color: #013440;
 }
 
+/* Cards */
+.red-card {
+    width: 16px;
+    height: 18px;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 2px;
+}
+
+.yellow-card {
+    width: 12px;
+    height: 18px;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 2px;
+    margin-left: 2px;
+}
+
+.red-yellow-card {
+    width: 12px;
+    height: 18px;
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 1px;
+    margin-right: 2px;
+}
 
 
 
