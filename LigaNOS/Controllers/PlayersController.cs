@@ -36,7 +36,7 @@ namespace LigaNOS.Controllers
         // GET: Players
         public IActionResult Index()
         {
-            return View(_playerRepository.GetAll().OrderBy(t => t.TeamName));
+            return View(_playerRepository.GetAll().OrderBy(n => n.Name));
         }
 
         // GET: Players/Details/5

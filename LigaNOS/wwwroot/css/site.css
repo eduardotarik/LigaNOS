@@ -16,10 +16,10 @@ a {
     color: #038C17;
 }
 
-    a:hover {
-        color: #025918;
-        text-decoration: none;
-    }
+a:hover {
+    color: #038C17;
+    text-decoration: none;
+}
 
 a.navbar-brand {
   white-space: normal;
@@ -38,9 +38,14 @@ a.navbar-brand {
 }
 
 .nav-pills .nav-link.active, .nav-pills .show > .nav-link {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #038C17;
+    color: #038C17;
+    background-color: #1b6ec2;
+    border-color: #038C17;
+}
+
+/* Change navbar item color on hover */
+.navbar-nav .nav-item .nav-link:hover {
+    color: #038C17;
 }
 
 /* Sticky footer styles
@@ -400,3 +405,137 @@ body {
     margin-top: 3px;
     margin-left: 5px;
 }
+
+/* Games Layout
+-------------------------------------------------- */
+.match-cell {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+.team-name {
+    margin-bottom: 0.5rem;
+}
+
+.score-cell {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+.home-score,
+.away-score {
+    margin: 0.2rem;
+}
+
+/*Gmes row separation */
+#games {
+    border-collapse: collapse;
+}
+
+    #games th,
+    #games td {
+        border-bottom: 1px solid #013440;
+        padding: 8px; /* Add padding for better spacing */
+        vertical-align: middle;
+    }
+
+#games th {
+    border-top: none; /* Remove top border for table header cells */
+}
+
+#games th {
+    border-top: none; /* Remove top border for table header cells */
+}
+
+
+/* Players row separation */
+#players {
+    border-collapse: collapse;
+}
+
+    #players th,
+    #players td {
+        border-bottom: 1px solid #013440;
+        padding: 8px; /* Add padding for better spacing */
+        vertical-align: middle;
+    }
+
+#players th {
+    border-top: none; /* Remove top border for table header cells */
+}
+
+#players th {
+    border-top: none; /* Remove top border for table header cells */
+}
+
+/* Teams row separation */
+#teams {
+    border-collapse: collapse;
+    color: #82C0D9;
+}
+
+    #teams th,
+    #teams td {
+        border-bottom: 1px solid #013440;
+        padding: 8px; /* Add padding for better spacing */
+        vertical-align: middle;
+    }
+
+#teams th {
+    border-top: none; /* Remove top border for table header cells */
+}
+
+#teams th {
+    border-top: none; /* Remove top border for table header cells */
+}
+
+/* Statistics table styling */
+#statistics {
+    border-collapse: collapse;
+    color: #82C0D9;
+    margin-top: 20px; /* Add some spacing between tables */
+}
+
+    #statistics th,
+    #statistics td {
+        border-bottom: 1px solid #013440;
+        padding: 8px; /* Add padding for better spacing */
+        vertical-align: middle;
+    }
+
+    #statistics th {
+        border-top: none; /* Remove top border for table header cells */
+    }
+
+    #statistics tbody tr:hover {
+        background-color: #013440;
+        color: #038C17;
+    }
+
+/* Button background and text colors */
+.btn-success,
+.btn-danger,
+.btn-primary {
+    background-color: #013440;
+    color: #038C17;
+    border-color: transparent;
+}
+
+table .btn-primary,
+table .btn-danger,
+table .btn-info {
+    background-color: #013440;
+    color: #038C17;
+    border-color: transparent;
+}
+
+/* Table head color */
+table thead th {
+    color: #013440;
+}
+
+
+
+

@@ -9,3 +9,7 @@ $(document).ready(function () {
 $(document).ready(function () {
     $('#players').DataTable();
 });
+
+$(document).ready(function () {
+    $('#statistics').DataTable();
+});
