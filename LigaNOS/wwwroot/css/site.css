@@ -90,13 +90,13 @@ body {
     color: #82C0D9;
 }
 .footer {
-    position: absolute;
+    position: fixed;
     bottom: 0;
     width: 100%;
-    white-space: nowrap;
+    height: 40px;
     background-color: #013440;
     border: none !important;
-    padding: 0;
+    padding: 10px 0;
 }
 
 
@@ -401,8 +401,15 @@ body {
     align-items: center;
 }
 
+.footer-logo-image {
+    width: 100px;
+    max-width: 100%;
+    height: auto;
+    margin-top: -19px;
+}
+
 .footer-logo-text {
-    margin-top: 3px;
+    margin-top: -22px;
     margin-left: 5px;
 }
 
