@@ -50,47 +50,49 @@
             @Html.DisplayNameFor(model => model.HomeTeamIssuedCard)
         </dt>
         <dd class="col-sm-10">
-            @if (!string.IsNullOrEmpty(Model.HomeTeamIssuedCard))
-            {
-                <span class="text-danger">
-                    @if (Model.HomeTeamIssuedCard == "Red")
+            <span class="text-danger">
+                @if (!string.IsNullOrEmpty(Model.HomeTeamIssuedCard))
+                {
+                    if (Model.HomeTeamIssuedCard == "Red")
                     {
-                        <i class="fas fa-square text-danger"></i> <!-- Red card icon -->
+                        <img src="~/images/cards/redcard.png" alt="Red Card" class="red-card" />
                     }
                     else if (Model.HomeTeamIssuedCard == "Yellow")
                     {
-                        <i class="fas fa-square text-warning"></i> <!-- Yellow card icon -->
+                        <img src="~/images/cards/yellowcard.png" alt="Yellow Card" class="yellow-card" />
                     }
                     else if (Model.HomeTeamIssuedCard == "RedYellow")
                     {
-                        <i class="fas fa-square text-danger"></i> <!-- Red card icon -->
-                        <i class="fas fa-square text-warning"></i> <!-- Yellow card icon -->
+                        <img src="~/images/cards/redcard.png" alt="Red Card" class="red-card" />
+                        <img src="~/images/cards/yellowcard.png" alt="Yellow Card" class="red-yellow-card" />
                     }
-                </span>
-            }
+                }
+            </span>
+            <br />
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.AwayTeamIssuedCard)
         </dt>
         <dd class="col-sm-10">
-            @if (!string.IsNullOrEmpty(Model.AwayTeamIssuedCard))
-            {
-                <span class="text-danger">
-                    @if (Model.AwayTeamIssuedCard == "Red")
+            <span class="text-danger">
+                @if (!string.IsNullOrEmpty(Model.AwayTeamIssuedCard))
+                {
+                    if (Model.AwayTeamIssuedCard == "Red")
                     {
-                        <i class="fas fa-square text-danger"></i> <!-- Red card icon -->
+                        <img src="~/images/cards/redcard.png" alt="Red Card" class="red-card" />
                     }
                     else if (Model.AwayTeamIssuedCard == "Yellow")
                     {
-                        <i class="fas fa-square text-warning"></i> <!-- Yellow card icon -->
+                        <img src="~/images/cards/yellowcard.png" alt="Yellow Card" class="yellow-card" />
                     }
                     else if (Model.AwayTeamIssuedCard == "RedYellow")
                     {
-                        <i class="fas fa-square text-danger"></i> <!-- Red card icon -->
-                        <i class="fas fa-square text-warning"></i> <!-- Yellow card icon -->
+                        <img src="~/images/cards/redcard.png" alt="Red Card" class="red-card" />
+                        <img src="~/images/cards/yellowcard.png" alt="Yellow Card" class="red-yellow-card" />
                     }
-                </span>
-            }
+                }
+            </span>
+            <br />
         </dd>
     </dl>
 </div>

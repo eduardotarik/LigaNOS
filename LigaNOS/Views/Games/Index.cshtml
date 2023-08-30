@@ -21,12 +21,12 @@
     }
 </script>
 
-<div class="games-header-content">
+<div class="games-header-content games-header-container">
     <h1 class="game-title">List of Games</h1>
     <p class="games-create-button">
-        <a asp-action="Create" class="btn btn-success"><i class="fas fa-plus"></i> Create Game</a>
-        <button class="btn btn-primary" onclick="confirmStartSeason()"><i class="fas fa-plus"></i> Start Season</button>
-        <button class="btn btn-danger" onclick="confirmEndSeason()"><i class="fas fa-minus"></i> End Season</button>
+        <a asp-action="Create" class="btn btn-success adjusted-button rounded"><i class="fas fa-plus"></i> Create Game</a>
+        <button class="btn btn-primary adjusted-button rounded" onclick="confirmStartSeason()"><i class="fas fa-plus"></i> Start Season</button>
+        <button class="btn btn-danger adjusted-button-custom rounded" onclick="confirmEndSeason()"><i class="fas fa-minus"></i> End Season</button>
     </p>
 </div>
 
@@ -34,117 +34,114 @@
     <!-- Optional: Other buttons or content aligned to the right -->
 </div>
 
-<table id="games">
-    <thead>
-        <tr>
-            <th>
-                Date
-            </th>
-            <th>
-                Match
-            </th>
-            <th>
-                Score
-            </th>
-            <th>
-                Cards
-            </th>
-            <th>
-                Status
-            </th>
-            <th>
-                Actions
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
+<div class="table-container">
+    <table class="table-footer-gap" id="games">
+        <thead>
             <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Date)
-                </td>
-                <td>
-                    <div class="match-cell text-left">
-                        <div class="team-name home-team text-left">@Html.DisplayFor(modelItem => item.HomeTeam)</div>
-                        <div class="team-name away-team text-left">@Html.DisplayFor(modelItem => item.AwayTeam)</div>
-                    </div>
-                </td>
+                <th>
+                    Date
+                </th>
+                <th>
+                    Match
+                </th>
+                <th>
+                    Score
+                </th>
+                <th>
+                    Cards
+                </th>
+                <th>
+                    Status
+                </th>
+                <th>
+                    Actions
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Date)
+                    </td>
+                    <td>
+                        <div class="match-cell text-left">
+                            <div class="team-name home-team text-left">@Html.DisplayFor(modelItem => item.HomeTeam)</div>
+                            <div class="team-name away-team text-left">@Html.DisplayFor(modelItem => item.AwayTeam)</div>
+                        </div>
+                    </td>
 
-                <td>
-                    <div class="score-cell">
-                        <div class="home-score">@Html.DisplayFor(modelItem => item.HomeTeamScore)</div>
-                        <div class="away-score">@Html.DisplayFor(modelItem => item.AwayTeamScore)</div>
-                    </div>
-                </td>
-                <td>
-                    <div class="card-cell">
-                        <span class="text-danger">
-                            @if (!string.IsNullOrEmpty(item.HomeTeamIssuedCard))
-                            {
-                                if (item.HomeTeamIssuedCard == "Red")
+                    <td>
+                        <div class="score-cell">
+                            <div class="home-score">@Html.DisplayFor(modelItem => item.HomeTeamScore)</div>
+                            <div class="away-score">@Html.DisplayFor(modelItem => item.AwayTeamScore)</div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="card-cell">
+                            <span class="text-danger">
+                                @if (!string.IsNullOrEmpty(item.HomeTeamIssuedCard))
                                 {
-                                    <img src="~/images/cards/redcard.png" alt="Red Card" class="red-card" />
+                                    if (item.HomeTeamIssuedCard == "Red")
+                                    {
+                                        <img src="~/images/cards/redcard.png" alt="Red Card" class="red-card" />
+                                    }
+                                    else if (item.HomeTeamIssuedCard == "Yellow")
+                                    {
+                                        <img src="~/images/cards/yellowcard.png" alt="Yellow Card" class="yellow-card" />
+                                    }
+                                    else if (item.HomeTeamIssuedCard == "RedYellow")
+                                    {
+                                        <img src="~/images/cards/redcard.png" alt="Red Card" class="red-card" />
+                                        <img src="~/images/cards/yellowcard.png" alt="Yellow Card" class="red-yellow-card" />
+                                    }
                                 }
-                                else if (item.HomeTeamIssuedCard == "Yellow")
-                                {
-                                    <img src="~/images/cards/yellowcard.png" alt="Yellow Card" class="yellow-card" />
-                                }
-                                else if (item.HomeTeamIssuedCard == "RedYellow")
-                                {
-                                    <img src="~/images/cards/redcard.png" alt="Red Card" class="red-card" />
-                                    <img src="~/images/cards/yellowcard.png" alt="Yellow Card" class="red-yellow-card" />
-                                }
-                            }
-                        </span>
-                        <br /> <!-- Line break to separate the cards for each team -->
+                            </span>
+                            <br /> <!-- Line break to separate the cards for each team -->
 
-                        <span class="text-danger">
-                            @if (!string.IsNullOrEmpty(item.AwayTeamIssuedCard))
-                            {
-                                if (item.AwayTeamIssuedCard == "Red")
+                            <span class="text-danger">
+                                @if (!string.IsNullOrEmpty(item.AwayTeamIssuedCard))
                                 {
-                                    <img src="~/images/cards/redcard.png" alt="Red Card" class="red-card" />
+                                    if (item.AwayTeamIssuedCard == "Red")
+                                    {
+                                        <img src="~/images/cards/redcard.png" alt="Red Card" class="red-card" />
+                                    }
+                                    else if (item.AwayTeamIssuedCard == "Yellow")
+                                    {
+                                        <img src="~/images/cards/yellowcard.png" alt="Yellow Card" class="yellow-card" />
+                                    }
+                                    else if (item.AwayTeamIssuedCard == "RedYellow")
+                                    {
+                                        <img src="~/images/cards/redcard.png" alt="Red Card" class="red-card" />
+                                        <img src="~/images/cards/yellowcard.png" alt="Yellow Card" class="red-yellow-card" />
+                                    }
                                 }
-                                else if (item.AwayTeamIssuedCard == "Yellow")
-                                {
-                                    <img src="~/images/cards/yellowcard.png" alt="Yellow Card" class="yellow-card" />
-                                }
-                                else if (item.AwayTeamIssuedCard == "RedYellow")
-                                {
-                                    <img src="~/images/cards/redcard.png" alt="Red Card" class="red-card" />
-                                    <img src="~/images/cards/yellowcard.png" alt="Yellow Card" class="red-yellow-card" />
-                                }
-                            }
-                        </span>
-                        <br />
-                    </div>
-                </td>
+                            </span>
+                            <br />
+                        </div>
+                    </td>
 
 
 
-                <td>
-                    @Html.DisplayFor(modelItem => item.IsPlayed)
-                </td>
-                <td>
-                    <div class="action-buttons">
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IsPlayed)
+                    </td>
+                    <td class="d-flex">
                         @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin"))
                         {
                             <div class="btn-group" role="group" style="display: inline-block;">
-                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary"><i class="fa-solid fa-pen-to-square"></i></a>
-                                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger"><i class="fa fa-trash"></i></a>
+                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary btn-margin-right rounded adjusted-icon"><i class="fa-solid fa-pen-to-square"></i></a>
+                                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger rounded custom-button adjusted-icon"><i class="fa fa-trash"></i></a>
                             </div>
                         }
-
-                        <div class="details-button" style="display: inline-block;">
-                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info"><i class="fa-solid fa-circle-info"></i></a>
-                        </div>
-                    </div>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info rounded btn-margin-top adjusted-icon"><i class="fa-solid fa-circle-info"></i></a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
 
 @section Scripts {
     @{

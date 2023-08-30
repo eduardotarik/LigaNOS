@@ -16,33 +16,35 @@
     </div>
 }
 
-<table class="table table-bordered table-striped" style="width: 100%">
-    <thead>
-        <tr>
-            <th>Username</th>
-            <th>Full Name</th>
-            <th>Roles</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var userWithRoles in Model)
-        {
-            var user = userWithRoles.User;
-            var roles = userWithRoles.Roles;
+<div class="table-container">
+    <table class="table-footer-gap table-bordered table-striped" style="width: 100%">
+        <thead>
             <tr>
-                <td>@user.UserName</td>
-                <td>@($"{user.FirstName} {user.LastName}")</td>
-                <td>
-                    @roles.FirstOrDefault()
-                </td>
-                <td>
-                    <form asp-controller="Account" asp-action="Delete" method="post">
-                        <input type="hidden" name="userId" value="@user.Id" />
-                        <button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i> Delete</button>
-                    </form>
-                </td>
+                <th>Username</th>
+                <th>Full Name</th>
+                <th>Roles</th>
+                <th></th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var userWithRoles in Model)
+            {
+                var user = userWithRoles.User;
+                var roles = userWithRoles.Roles;
+                <tr>
+                    <td>@user.UserName</td>
+                    <td>@($"{user.FirstName} {user.LastName}")</td>
+                    <td>
+                        @roles.FirstOrDefault()
+                    </td>
+                    <td>
+                        <form asp-controller="Account" asp-action="Delete" method="post">
+                            <input type="hidden" name="userId" value="@user.Id" />
+                            <button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i> Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
