@@ -2,34 +2,36 @@
 
 <h1>Team Statistics</h1>
 
-<table id="statistics">
-    <thead>
-        <tr>
-            <th>Rank</th>
-            <th>Team Name</th>
-            <th>GP</th>
-            <th>W</th>
-            <th>D</th>
-            <th>L</th>
-            <th>GF</th>
-            <th>GA</th>
-            <th>Pts</th>
-        </tr>
-    </thead>
-    <tbody>
-        @for (int i = 0; i < Model.Count; i++)
-        {
+<div class="table-container">
+    <table class="table-footer-gap" id="statistics">
+        <thead>
             <tr>
-                <td>@(i + 1)</td>
-                <td>@Model[i].TeamName</td>
-                <td>@Model[i].TotalGames</td>
-                <td>@Model[i].Wins</td>
-                <td>@Model[i].Draws</td>
-                <td>@Model[i].Losses</td>
-                <td>@Model[i].GoalsFor</td>
-                <td>@Model[i].GoalsAgainst</td>
-                <td>@Model[i].Points</td>
+                <th>Rank</th>
+                <th>Team Name</th>
+                <th>GP</th>
+                <th>W</th>
+                <th>D</th>
+                <th>L</th>
+                <th>GF</th>
+                <th>GA</th>
+                <th>Pts</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < Model.Count; i++)
+            {
+                <tr>
+                    <td>@(i + 1)</td>
+                    <td>@Model[i].TeamName</td>
+                    <td>@Model[i].TotalGames</td>
+                    <td>@Model[i].Wins</td>
+                    <td>@Model[i].Draws</td>
+                    <td>@Model[i].Losses</td>
+                    <td>@Model[i].GoalsFor</td>
+                    <td>@Model[i].GoalsAgainst</td>
+                    <td>@Model[i].Points</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
