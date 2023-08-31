@@ -72,6 +72,9 @@ namespace LigaNOS
             services.AddScoped<IGameRepository, GameRepository>();
             services.AddScoped<IPlayerRepository, PlayerRepository>();
 
+            services.AddControllersWithViews();
+            services.AddLogging();
+
             services.ConfigureApplicationCookie(cfg =>
             {
                 cfg.LoginPath = "/Account/NotAuthorized";

@@ -17,9 +17,10 @@
 }
 
 <div class="table-container">
-    <table class="table-footer-gap table-bordered table-striped" style="width: 100%">
+    <table class="table-footer-gap" id="userlist">
         <thead>
             <tr>
+                <th>Photo</th>
                 <th>Username</th>
                 <th>Full Name</th>
                 <th>Roles</th>
@@ -32,17 +33,30 @@
                 var user = userWithRoles.User;
                 var roles = userWithRoles.Roles;
                 <tr>
+                    <td>
+                        @if (user.ProfileImage == null)
+                        {
+                            <img src="~/images/no_image.png" alt="Default Profile Image" width="50" />
+                        }
+                        else
+                        {
+                            <img src="@Url.Content("~/images/photos/" + user.ProfileImage)" alt="Profile Image" width="50" />
+                        }
+                    </td>
                     <td>@user.UserName</td>
                     <td>@($"{user.FirstName} {user.LastName}")</td>
                     <td>
                         @roles.FirstOrDefault()
                     </td>
-                    <td>
+                    <td style="display: flex; align-items: center;">
+                        <a asp-controller="Account" asp-action="Edit" asp-route-id="@user.Id" class="btn btn-primary rounded adjusted-icon btn-margin-right"><i class="fa fa-edit"></i></a>
                         <form asp-controller="Account" asp-action="Delete" method="post">
                             <input type="hidden" name="userId" value="@user.Id" />
-                            <button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i> Delete</button>
+                            <button type="submit" class="btn btn-danger rounded adjusted-icon btn-margin-right"><i class="fa fa-trash"></i></button>
                         </form>
+                        <a asp-controller="Account" asp-action="Details" asp-route-id="@user.Id" class="btn btn-info rounded adjusted-icon"><i class="fa fa-info-circle"></i></a>
                     </td>
+
                 </tr>
             }
         </tbody>

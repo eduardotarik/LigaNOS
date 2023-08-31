@@ -3,15 +3,18 @@ using LigaNOS.Data.Entities;
 using LigaNOS.Helpers;
 using LigaNOS.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
@@ -29,13 +32,17 @@ namespace LigaNOS.Controllers
         private readonly DataContext _context;
         private readonly UserManager<User> _userManager;
         private readonly IConfiguration _configuration;
+        private readonly IWebHostEnvironment _hostEnvironment;
+        private readonly ILogger<AccountController> _logger;
 
         public AccountController(IUserHelper userHelper,
             IMailHelper mailHelper,
             RoleManager<IdentityRole> roleManager,
             DataContext context,
             UserManager<User> userManager,
-            IConfiguration configuration)
+            IConfiguration configuration,
+            IWebHostEnvironment hostEnvironment,
+            ILogger<AccountController> logger)
         {
             _userHelper = userHelper;
             _mailHelper = mailHelper;
@@ -43,6 +50,8 @@ namespace LigaNOS.Controllers
             _context = context;
             _userManager = userManager;
             _configuration = configuration;
+            _hostEnvironment = hostEnvironment;
+            _logger = logger;
         }
 
         public IActionResult Login()
@@ -113,6 +122,28 @@ namespace LigaNOS.Controllers
                     FirstName = model.FirstName,
                     LastName = model.LastName
                 };
+
+                if (model.ProfileImage != null)
+                {
+                    // Calculate the physical path to the directory where images should be stored
+                    var imageDirectory = Path.Combine(_hostEnvironment.WebRootPath, "images", "photos");
+
+                    if (!Directory.Exists(imageDirectory))
+                    {
+                        Directory.CreateDirectory(imageDirectory);
+                    }
+
+                    var imageFileName = Guid.NewGuid().ToString() + Path.GetExtension(model.ProfileImage.FileName);
+                    var imagePathWithFileName = Path.Combine(imageDirectory, imageFileName);
+
+                    using (var stream = new FileStream(imagePathWithFileName, FileMode.Create))
+                    {
+                        await model.ProfileImage.CopyToAsync(stream);
+                    }
+
+                    user.ProfileImage = imageFileName; // Save the image path in the user's record
+                }
+
 
                 var result = await _userHelper.CreateUserAsync(user, model.Password, model.SelectedRole);
 
@@ -211,8 +242,12 @@ namespace LigaNOS.Controllers
 
                 if (await _userManager.IsInRoleAsync(user, "Admin"))
                 {
+                    _logger.LogInformation("User is in 'Admin' role.");
+
                     if (loggedInUser.Id == user.Id)
                     {
+                        _logger.LogInformation("User is trying to delete themselves as an admin.");
+
                         TempData["AdminDeleteErrorMessage"] = "You cannot delete yourself as an admin.";
                         return RedirectToAction("UserList", "Account");
                     }

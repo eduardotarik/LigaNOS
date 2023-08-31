@@ -8,5 +8,7 @@ namespace LigaNOS.Data.Entities
         public string FirstName { get; set; }
 
         public string LastName { get; set; }
+
+        public string ProfileImage { get; set; }
     }
 }

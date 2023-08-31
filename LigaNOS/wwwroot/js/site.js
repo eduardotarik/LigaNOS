@@ -13,3 +13,7 @@ $(document).ready(function () {
 $(document).ready(function () {
     $('#statistics').DataTable();
 });
+
+$(document).ready(function () {
+    $('#userlist').DataTable();
+});
