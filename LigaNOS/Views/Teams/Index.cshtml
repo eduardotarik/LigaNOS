@@ -5,7 +5,7 @@
 }
 
 <div class="teams-header-content">
-    <h1 class="teams-title">List of Teams</h1>
+    <h1 class="page-title-style">List of Teams</h1>
     <p class="teams-create-button">
         @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin"))
         {
@@ -66,8 +66,8 @@
                 <td>
                     @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin"))
                     {
-                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary rounded adjusted-icon btn-margin-top"><i class="fa-solid fa-pen-to-square"></i></a>
-                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger rounded custom-button adjusted-icon btn-margin-top" style="padding-right: 10px;"><i class="fa fa-trash"></i></a>
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary rounded adjusted-icon"><i class="fa-solid fa-pen-to-square"></i></a>
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger rounded custom-button adjusted-icon" style="padding-right: 10px;"><i class="fa fa-trash"></i></a>
                     }
 
                     <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info rounded adjusted-icon btn-margin-top"><i class="fa-solid fa-circle-info"></i></a>

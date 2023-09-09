@@ -98,12 +98,31 @@ footer.navbar-inverse .navbar-nav > li > a:hover {
     color: #038C17;
 }
 
+/* Index font color */
+.page-title-style {
+    color: #013440;
+    font-weight: bold;
+    margin: 0;
+}
 
+/* Statistics */
+.statistic-table-margin {
+    margin-bottom: 20px;
+}
 
+/* Info colors */
+.page-info-color dt {
+    color: #013440;
+    font-weight: bold;
+}
+
+.page-info-color dd {
+    color: #038C17;
+}
 /* Sticky footer styles
 -------------------------------------------------- */
 html {
-  font-size: 14px;
+    font-size: 14px;
 }
 @media (min-width: 768px) {
   html {
@@ -395,11 +414,6 @@ body {
     margin-bottom: 20px; /* Add some spacing between header and table */
 }
 
-.teams-title {
-    margin: 0;
-    font-size: 24px;
-}
-
 .teams-create-button {
     margin: 0;
 }
@@ -410,11 +424,6 @@ body {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px; /* Add some spacing between header and table */
-}
-
-.games-title {
-    margin: 0;
-    font-size: 24px;
 }
 
 .games-create-button {
@@ -429,11 +438,6 @@ body {
     margin-bottom: 20px; /* Add some spacing between header and table */
 }
 
-.players-title {
-    margin: 0;
-    font-size: 24px;
-}
-
 .players-create-button {
     margin: 0;
 }
@@ -441,10 +445,10 @@ body {
 /* Logo image
 -------------------------------------------------- */
 .logo-image {
-    width: 100px;
+    width: 130px;
     max-width: 100%;
     height: auto;
-    margin-top: 5px;
+    margin-top: -29px;
 }
 
 /* Logo in footer */
@@ -695,6 +699,4 @@ color: #013440;
     margin-left: 1px;
     margin-right: 2px;
 }
-
-
 
