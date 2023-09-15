@@ -4,6 +4,7 @@ using LigaNOS.Helpers;
 using LigaNOS.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -20,6 +21,9 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using User = LigaNOS.Data.Entities.User;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.SqlServer.Management.Smo;
+using Microsoft.AspNetCore.Razor.Language.Intermediate;
 
 namespace LigaNOS.Controllers
 {
@@ -32,7 +36,7 @@ namespace LigaNOS.Controllers
         private readonly DataContext _context;
         private readonly UserManager<User> _userManager;
         private readonly IConfiguration _configuration;
-        private readonly IWebHostEnvironment _hostEnvironment;
+        private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly ILogger<AccountController> _logger;
 
         public AccountController(IUserHelper userHelper,
@@ -41,7 +45,7 @@ namespace LigaNOS.Controllers
             DataContext context,
             UserManager<User> userManager,
             IConfiguration configuration,
-            IWebHostEnvironment hostEnvironment,
+            IWebHostEnvironment hostingEnvironment,
             ILogger<AccountController> logger)
         {
             _userHelper = userHelper;
@@ -50,7 +54,7 @@ namespace LigaNOS.Controllers
             _context = context;
             _userManager = userManager;
             _configuration = configuration;
-            _hostEnvironment = hostEnvironment;
+            _hostingEnvironment = hostingEnvironment;
             _logger = logger;
         }
 
@@ -71,26 +75,45 @@ namespace LigaNOS.Controllers
             {
                 var user = await _userHelper.GetUserByEmailAsync(model.Username);
 
-                if (user != null && await _userManager.IsInRoleAsync(user, "Admin") ||
-                                    await _userManager.IsInRoleAsync(user, "Team") ||
-                                    await _userManager.IsInRoleAsync(user, "Staff"))
+                if (user != null)
                 {
-                    var result = await _userHelper.LoginAsync(model);
-                    if (result.Succeeded)
+                    if (await _userManager.IsInRoleAsync(user, "Admin") ||
+                        await _userManager.IsInRoleAsync(user, "Team") ||
+                        await _userManager.IsInRoleAsync(user, "Staff"))
                     {
-                        if (this.Request.Query.Keys.Contains("ReturnUrl"))
+                        var result = await _userHelper.LoginAsync(model);
+                        if (result.Succeeded)
                         {
-                            return Redirect(this.Request.Query["ReturnUrl"].First());
-                        }
+                            if (this.Request.Query.Keys.Contains("ReturnUrl"))
+                            {
+                                return Redirect(this.Request.Query["ReturnUrl"].First());
+                            }
 
-                        return RedirectToAction("Index", "Home");
+                            return RedirectToAction("Index", "Home");
+                        }
+                        else
+                        {
+                            // Handle login failure if needed.
+                            ModelState.AddModelError(string.Empty, "Failed to login");
+                        }
                     }
+                    else
+                    {
+                        // Handle the case where the user is not in any of the specified roles.
+                        ModelState.AddModelError(string.Empty, "User is not authorized.");
+                    }
+                }
+                else
+                {
+                    // Handle the case where the user with the given email address was not found.
+                    ModelState.AddModelError(string.Empty, "User not found.");
                 }
             }
 
-            this.ModelState.AddModelError(string.Empty, "Failed to login");
+            // If any validation error occurs, return to the login view with error messages.
             return View(model);
         }
+
 
 
         public async Task<IActionResult> Logout()
@@ -126,7 +149,7 @@ namespace LigaNOS.Controllers
                 if (model.ProfileImage != null)
                 {
                     // Calculate the physical path to the directory where images should be stored
-                    var imageDirectory = Path.Combine(_hostEnvironment.WebRootPath, "images", "photos");
+                    var imageDirectory = Path.Combine(_hostingEnvironment.WebRootPath, "images", "photos");
 
                     if (!Directory.Exists(imageDirectory))
                     {
@@ -309,18 +332,20 @@ namespace LigaNOS.Controllers
             return View(usersWithRoles);
         }
 
+        [HttpGet]
         public async Task<IActionResult> ChangeUser()
         {
             var user = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
-            var model = new ChangeUserViewModel();
-            if (user != null)
+            var model = new ChangeUserViewModel
             {
-                model.FirstName = user.FirstName;
-                model.LastName = user.LastName;
-            }
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                CurrentProfileImage = user.ProfileImage // Populate the CurrentProfileImage property
+            };
 
             return View(model);
         }
+
 
         [HttpPost]
         public async Task<IActionResult> ChangeUser(ChangeUserViewModel model)
@@ -328,36 +353,57 @@ namespace LigaNOS.Controllers
             if (ModelState.IsValid)
             {
                 var user = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
+
                 if (user != null)
                 {
-                    bool hasChanges = user.FirstName != model.FirstName || user.LastName != model.LastName;
-
-                    if (hasChanges)
+                    // Check if a new image was uploaded
+                    if (model.ProfileImage != null)
                     {
-                        user.FirstName = model.FirstName;
-                        user.LastName = model.LastName;
-                        var response = await _userHelper.UpdateUserAsync(user);
-                        if (response.Succeeded)
+                        // Process the new image, e.g., save it to the server
+                        var imageFileName = Guid.NewGuid().ToString() + Path.GetExtension(model.ProfileImage.FileName);
+                        var imagePathWithFileName = Path.Combine(_hostingEnvironment.WebRootPath, "images", "photos", imageFileName);
+
+                        using (var stream = new FileStream(imagePathWithFileName, FileMode.Create))
                         {
-                            ViewBag.UserMessage = "User updated!";
-                            ViewBag.UserMessageColor = "text-success"; // Green color for success
+                            await model.ProfileImage.CopyToAsync(stream);
                         }
-                        else
-                        {
-                            ModelState.AddModelError(string.Empty, response.Errors.FirstOrDefault().Description);
-                            ViewBag.UserMessageColor = "text-danger"; // Red color for error
-                        }
+
+                        // Update the user's ProfileImage property with the new image file name
+                        user.ProfileImage = imageFileName;
+                    }
+
+                    // Update other user properties
+                    user.FirstName = model.FirstName;
+                    user.LastName = model.LastName;
+
+                    // Update the user in the database
+                    var result = await _userHelper.UpdateUserAsync(user);
+
+                    if (result.Succeeded)
+                    {
+                        // Set the success message in the view model
+                        model.UserUpdatedMessage = "User information updated successfully. Click on your username to see the changes!";
+
+                        // Return the updated model to display the updated information
+                        return View(model);
                     }
                     else
                     {
-                        ViewBag.UserMessage = "You need to change user info first!";
-                        ViewBag.UserMessageColor = "text-warning"; // Yellow color for info
+                        // Handle errors, e.g., result.Errors
                     }
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "User not found.");
                 }
             }
 
+            // Repopulate the form and display errors
             return View(model);
         }
+
+
+
 
         public IActionResult ChangePassword()
         {
@@ -458,6 +504,250 @@ namespace LigaNOS.Controllers
         public IActionResult NotAuthorized()
         {
             return View();
+        }
+
+        [HttpGet]
+        [RoleAuthorization("Admin")] // Ensure that only Admins can access this action
+        public async Task<IActionResult> Edit(string id)
+        {
+            // Retrieve the user by ID
+            var user = await _userHelper.GetUserByIdAsync(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            // Map the user information to an EditUserViewModel (create this ViewModel)
+            var editUserViewModel = new EditUserViewModel
+            {
+                Id = user.Id,
+                Username = user.UserName,
+                Email = user.Email,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                // Add other properties you want to edit
+            };
+
+            // Pass the user to the view
+            return View(editUserViewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [RoleAuthorization("Admin")] // Ensure that only Admins can access this action
+        public async Task<IActionResult> Edit(EditUserViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userHelper.GetUserByIdAsync(model.Id);
+
+                if (user != null)
+                {
+                    // Check if any updates were made
+                    if (!string.Equals(user.UserName, model.Username) || !string.Equals(user.Email, model.Email) || !string.Equals(user.FirstName, model.FirstName) || !string.Equals(user.LastName, model.LastName))
+                    {
+                        // Handle updates here
+
+                        // Set a success message in TempData
+                        TempData["UserUpdatedMessage"] = "User information updated successfully.";
+                    }
+                    else
+                    {
+                        TempData["UserUpdatedMessage"] = null; // Clear the message if no updates were made
+                    }
+
+                    // Check if a new image was uploaded
+                    if (model.ProfileImage != null)
+                    {
+                        // Process the new image, e.g., save it to the server
+                        string newImageFileName = await ProcessUploadedFileAsync(model.ProfileImage);
+
+                        // Delete the old image if necessary
+                        if (!string.IsNullOrEmpty(user.ProfileImage))
+                        {
+                            DeleteOldImage(user.ProfileImage);
+                        }
+
+                        // Update the user's ProfileImage property with the new image file name
+                        user.ProfileImage = newImageFileName;
+                    }
+
+                    // Update other user properties
+                    user.UserName = model.Username;
+                    user.Email = model.Email;
+                    user.FirstName = model.FirstName;
+                    user.LastName = model.LastName;
+
+                    // Update the user in the database
+                    var result = await _userHelper.UpdateUserAsync(user);
+
+                    if (result.Succeeded)
+                    {
+                        TempData["UserUpdatedMessage"] = "User information updated successfully.";
+                        return RedirectToAction("UserList");
+                    }
+                    else
+                    {
+                        // Handle errors, e.g., result.Errors
+                    }
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "User not found.");
+                }
+            }
+
+            // Repopulate the form and display errors
+            return View(model);
+        }
+
+
+        private async Task<string> ProcessUploadedFileAsync(IFormFile profileImage)
+        {
+            if (profileImage == null || profileImage.Length == 0)
+            {
+                return null; // No file uploaded or file size is zero
+            }
+
+            // Generate a unique file name for the uploaded image
+            string uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(profileImage.FileName);
+            string uploadsFolder = Path.Combine(_hostingEnvironment.WebRootPath, "images", "photos");
+
+            // Ensure the directory exists
+            Directory.CreateDirectory(uploadsFolder);
+
+            // Combine the uploads folder and the unique file name to get the full file path
+            string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+            // Save the uploaded image to the file system
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await profileImage.CopyToAsync(stream);
+            }
+
+            return uniqueFileName;
+        }
+
+        private void DeleteOldImage(string fileName)
+        {
+            string filePath = Path.Combine(_hostingEnvironment.WebRootPath, "images", "photos", fileName);
+
+            if (System.IO.File.Exists(filePath))
+            {
+                System.IO.File.Delete(filePath);
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UploadProfileImage(IFormFile profileImage)
+        {
+            if (profileImage != null && profileImage.Length > 0)
+            {
+                var user = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
+
+                if (user != null)
+                {
+                    // Process the new image, e.g., save it to the server
+                    var imageFileName = Guid.NewGuid().ToString() + Path.GetExtension(profileImage.FileName);
+                    var imagePathWithFileName = Path.Combine(_hostingEnvironment.WebRootPath, "images", "photos", imageFileName);
+
+                    using (var stream = new FileStream(imagePathWithFileName, FileMode.Create))
+                    {
+                        await profileImage.CopyToAsync(stream);
+                    }
+
+                    // Update the user's ProfileImage property with the new image file name
+                    user.ProfileImage = imageFileName;
+
+                    // Update the user in the database
+                    var result = await _userHelper.UpdateUserAsync(user);
+
+                    if (result.Succeeded)
+                    {
+                        TempData["UserUpdatedMessage"] = "Profile image updated successfully.";
+                        return RedirectToAction("UserList"); // Redirect to UserList or ChangeUser as needed
+                    }
+                    else
+                    {
+                        // Handle errors, e.g., result.Errors
+                    }
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "User not found.");
+                }
+            }
+
+            // Redirect to UserList or ChangeUser with errors as needed
+            return RedirectToAction("UserList"); // Redirect to UserList or ChangeUser as needed
+        }
+
+        public IActionResult RecoverPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RecoverPassword(RecoverPasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userHelper.GetUserByEmailAsync(model.Email);
+                if (user == null)
+                {
+                    ModelState.AddModelError(string.Empty, "The email doesn't correspond to a registered user.");
+                    return View(model);
+                }
+
+                var myToken = await _userHelper.GeneratePasswordResetTokenAsync(user);
+
+                var link = this.Url.Action(
+                    "ResetPassword",
+                    "Account",
+                    new { token = myToken }, protocol: HttpContext.Request.Scheme);
+
+                Response response = await _mailHelper.SendEmail(model.Email, "Account Password Reset", $"<h1>Account Password Reset</h1>" +
+                    $"To reset the password, click the link:</br></br>" +
+                    $"<a href = \"{link}\">Reset Password</a>");
+                        
+                if (response.IsSuccess)
+                {
+                    this.ViewBag.Message = "The instructions to recover your password have been sent to email.";
+                    return View(model);
+                }
+
+                this.ViewBag.Message = "Error while resetting the password!";
+                return View(model);
+            }
+
+            this.ViewBag.Message = "User not found!";
+            return View(model);
+        }
+
+        public IActionResult ResetPassword(string token)
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
+        {
+            var user = await _userHelper.GetUserByEmailAsync(model.Username);
+            if (user != null)
+            {
+                var result = await _userHelper.ResetPasswordAsync(user, model.Token, model.Password);
+                if (result.Succeeded)
+                {
+                    this.ViewBag.Message = "Password reset successful.";
+                    return View();
+                }
+
+                this.ViewBag.Message = "Error while reseting the password.";
+                return View(model);
+            }
+            this.ViewBag.Message = "User not found.";
+            return View(model);
         }
     }
 }

@@ -294,6 +294,11 @@ namespace LigaNOS.Controllers
             // Clear existing games
             await _gameRepository.ClearGamesAsync();
 
+            var random = new Random();
+            var startHour = 6; // Start at 6:00 AM
+            var endHour = 9;   // End at 9:00 AM the next day
+            var intervalMinutes = 30; // 30-minute intervals
+
             // Generate games
             foreach (var homeTeam in teams)
             {
@@ -301,11 +306,21 @@ namespace LigaNOS.Controllers
                 {
                     if (homeTeam.Id != awayTeam.Id)
                     {
+                        // Calculate a random date within the range
+                        var daysToAdd = random.Next(1, 30);
+                        var hoursToAdd = random.Next(startHour, endHour);
+                        var minutesToAdd = random.Next(0, 30) * intervalMinutes;
+
+                        var gameDate = DateTime.Today
+                            .AddDays(daysToAdd)
+                            .AddHours(hoursToAdd)
+                            .AddMinutes(minutesToAdd);
+
                         var game = new Game
                         {
                             HomeTeam = homeTeam.Name,
                             AwayTeam = awayTeam.Name,
-                            Date = DateTime.Today.AddDays(new Random().Next(1, 30)), // Set a random date
+                            Date = gameDate,
                             HomeTeamScore = null, // Set a default score
                             AwayTeamScore = null, // Set a default score
                             IsPlayed = false,

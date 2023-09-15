@@ -1,6 +1,7 @@
 ﻿using LigaNOS.Data.Entities;
 using LigaNOS.Helpers;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Diagnostics;
 using Microsoft.VisualBasic;
 using System;
 using System.Linq;
@@ -65,10 +66,10 @@ namespace LigaNOS.Data
 
             if (!_context.Teams.Any())
             {
-                AddTeam("F. C. Porto", "Portugal", "Porto", "Estádio do Dragão", user);
-                AddTeam("S. L. Benfica", "Portugal", "Lisbon", "Estádio da Luz", user);
-                AddTeam("Sporting C. P.", "Portugal", "Lisbon", "Estádio José Alvalade", user);
-                AddTeam("S. C. Braga", "Portugal", "Braga", "Estádio Municipal de Braga", user);
+                AddTeam("F. C. Porto", new DateTime(1893, 9, 28), "Portugal", "Porto", "Estádio do Dragão", user);
+                AddTeam("S. L. Benfica", new DateTime(1904, 2, 28),"Portugal", "Lisbon", "Estádio da Luz", user);
+                AddTeam("Sporting C. P.", new DateTime(1906, 7, 1), "Portugal", "Lisbon", "Estádio José Alvalade", user);
+                AddTeam("S. C. Braga", new DateTime(1921, 1, 19), "Portugal", "Braga", "Estádio Municipal de Braga", user);
                 await _context.SaveChangesAsync();
             }
 
@@ -87,20 +88,20 @@ namespace LigaNOS.Data
 
             if (!_context.Players.Any())
             {
-                AddPlayer("Abel Ruiz", 25, "Forward", "S. C. Braga", user);
-                AddPlayer("Stephen Eustaquio", 28, "Midfielder", "F. C. Porto", user);
-                AddPlayer("António Silva ", 23, "Defender", "S. L. Benfica", user);
+                AddPlayer("Abel Ruiz", 25, "Center Forward", "S. C. Braga", user);
+                AddPlayer("Stephen Eustaquio", 28, "Center Midfielder", "F. C. Porto", user);
+                AddPlayer("António Silva ", 23, "Center-back", "S. L. Benfica", user);
                 AddPlayer("Franco Israel", 30, "Goalkeeper", "Sporting C. P.", user);
                 await _context.SaveChangesAsync();
             }
         }
 
-        private void AddTeam(string name, string country, string city, string stadium, User user)
+        private void AddTeam(string name, DateTime foundedDate, string country, string city, string stadium, User user)
         {
             _context.Teams.Add(new Team
             {
                 Name = name,
-                Founded = DateTime.Now.AddDays(1),
+                Founded = foundedDate,
                 Country = country,
                 City = city,
                 Stadium = stadium,

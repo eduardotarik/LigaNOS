@@ -1,4 +1,19 @@
-﻿@model LigaNOS.Models.CreateUserViewModel
+﻿<style>
+    body, html {
+        height: 105%;
+    }
+
+
+</style>
+
+@model LigaNOS.Models.CreateUserViewModel
+
+<div>
+    <h1 class="page-title-style">Create</h1>
+</div>
+
+<h2>User</h2>
+<hr />
 
 @if (TempData["EmailConfirmationMessage"] != null)
 {
@@ -7,9 +22,7 @@
     </div>
 }
 
-<h2>Create User</h2>
-
-<div class="row">
+<div class="container">
     <div class="col-md-4 offset-md-4">
         @using (Html.BeginForm("Create", "Account", FormMethod.Post, new { enctype = "multipart/form-data" }))
         {
@@ -32,6 +45,11 @@
                 <input asp-for="ProfileImage" class="form-control" type="file" />
                 <span asp-validation-for="ProfileImage" class="text-danger"></span>
             </div>
+
+            @*<div class="form-group">
+                <label for="uploadFiles">Upload Profile Image</label>
+                <ejs-uploader id="uploadFiles" autoUpload="false"></ejs-uploader>
+            </div>*@
 
             <div class="form-group">
                 @Html.LabelFor(model => model.Username)
@@ -72,8 +90,17 @@
     </div>
 </div>
 
+
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+
+    @*<script>
+        // Initialize the uploader component
+        var uploader = new ej.inputs.Uploader({});
+        uploader.appendTo('#uploadFiles');
+    </script>*@
+    
 }
+

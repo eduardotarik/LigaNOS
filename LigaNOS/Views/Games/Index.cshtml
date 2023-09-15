@@ -21,8 +21,8 @@
     }
 </script>
 
-<div class="games-header-content games-header-container">
-    <h1 class="game-title page-title-style">List of Games</h1>
+<div>
+    <h1 class="page-title-style">List of Games</h1>
     <p class="games-create-button">
         <a asp-action="Create" class="btn btn-primary adjusted-button rounded"><i class="fas fa-plus"></i> Create Game</a>
         <button class="btn btn-primary adjusted-button rounded" onclick="confirmStartSeason()"><i class="fas fa-plus"></i> Start Season</button>
@@ -34,7 +34,7 @@
     <!-- Optional: Other buttons or content aligned to the right -->
 </div>
 
-<div class="table-container">
+<div class="container">
     <table class="table-footer-gap" id="games">
         <thead>
             <tr>
@@ -94,7 +94,7 @@
                                     else if (item.HomeTeamIssuedCard == "RedYellow")
                                     {
                                         <img src="~/images/cards/redcard.png" alt="Red Card" class="red-card" />
-                                        <img src="~/images/cards/yellowcard.png" alt="Yellow Card" class="red-yellow-card" />
+                                        <img src="~/images/cards/yellowcard.png" alt="Yellow Card" class="yellow-card" />
                                     }
                                 }
                             </span>
@@ -105,16 +105,16 @@
                                 {
                                     if (item.AwayTeamIssuedCard == "Red")
                                     {
-                                        <img src="~/images/cards/redcard.png" alt="Red Card" class="red-card" />
+                                        <img src="~/images/cards/redcard.png" alt="Red Card" class="red-card-away" />
                                     }
                                     else if (item.AwayTeamIssuedCard == "Yellow")
                                     {
-                                        <img src="~/images/cards/yellowcard.png" alt="Yellow Card" class="yellow-card" />
+                                        <img src="~/images/cards/yellowcard.png" alt="Yellow Card" class="yellow-card-away" />
                                     }
                                     else if (item.AwayTeamIssuedCard == "RedYellow")
                                     {
-                                        <img src="~/images/cards/redcard.png" alt="Red Card" class="red-card" />
-                                        <img src="~/images/cards/yellowcard.png" alt="Yellow Card" class="red-yellow-card" />
+                                        <img src="~/images/cards/redcard.png" alt="Red Card" class="red-card-away" />
+                                        <img src="~/images/cards/yellowcard.png" alt="Yellow Card" class="yellow-card-away" />
                                     }
                                 }
                             </span>
@@ -147,7 +147,8 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-    
+
+
 }
 
 

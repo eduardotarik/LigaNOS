@@ -4,8 +4,8 @@
     ViewData["Title"] = "Index";
 }
 
-<div class="players-header-content">
-    <h1 class="players-title page-title-style">List of Players</h1>
+<div>
+    <h1 class="page-title-style">List of Players</h1>
     <p class="players-create-button">
         @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin"))
         {
@@ -15,7 +15,7 @@
     </p>
  </div>
 
-<div class="table-container">
+<div class="container">
     <table class="table-footer-gap" id="players">
         <thead>
             <tr>
@@ -38,40 +38,42 @@
             </tr>
         </thead>
         <tbody>
-    @foreach (var item in Model) {
-            <tr>
-                <td>
-                    @if (!string.IsNullOrEmpty(item.ImageFullPath))
-                    {
-                        <img src="@Url.Content(item.ImageFullPath)" alt="Emblem" style="display: block; margin: 0 auto; width: 100px; height: 100px; max-width: 100%; height: auto ">
-                    }
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Age)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Position)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.TeamName)
-                </td>
-                <td class="d-flex">
-                        @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin"))
+            @foreach (var item in Model) 
+            {
+                <tr>
+                    <td>
+                        @if (!string.IsNullOrEmpty(item.ImageFullPath))
                         {
-                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary rounded adjusted-icon btn-margin-top" style="margin-right: 0px;">
-                                <i class="fa-solid fa-pen-to-square"></i></a>
-                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger rounded custom-button adjusted-icon btn-margin-top" style="padding-right: 10px; margin-left: 0px;">
-                                <i class="fa fa-trash"></i></a>
-                        }
+                                <img src="@Url.Content(item.ImageFullPath)" alt="Emblem" style="display: block; margin: 0 auto; width: 100px; height: 100px; max-width: 100%; height: auto; border-radius: 50%;" />
 
-                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info rounded adjusted-icon btn-margin-top">
-                            <i class="fa-solid fa-circle-info"></i></a>
-                </td>
-            </tr>
-    }
+                        }
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Age)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Position)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TeamName)
+                    </td>
+                    <td class="d-flex">
+                            @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin"))
+                            {
+                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary rounded adjusted-icon btn-margin-top" style="margin-right: 0px;">
+                                    <i class="fa-solid fa-pen-to-square"></i></a>
+                                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger rounded custom-button adjusted-icon btn-margin-top" style="padding-right: 10px; margin-left: 0px;">
+                                    <i class="fa fa-trash"></i></a>
+                            }
+
+                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info rounded adjusted-icon btn-margin-top">
+                                <i class="fa-solid fa-circle-info"></i></a>
+                    </td>
+                </tr>
+            }
         </tbody>
     </table>
 </div>

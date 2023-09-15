@@ -1,20 +1,23 @@
 ﻿@model LigaNOS.Data.Entities.User
 
-<h2>Delete User</h2>
+<h1 class="page-title-style">Delete</h1>
 
-<div>
-    <h4>User Details</h4>
-    <dl class="row">
-        <dt class="col-sm-2">Username</dt>
-        <dd class="col-sm-10">@Model.UserName</dd>
-    </dl>
-</div>
-
-<form asp-controller="Account" asp-action="DeleteConfirmed" method="post">
-    <input type="hidden" asp-for="Id" />
-    <div class="form-group">
-        <p>Are you sure you want to delete this user?</p>
-        <button type="submit" value="Confirm Delete" class="btn btn-danger"><i class="fa fa-trash"></i> Delete</button>
-        <a asp-action="UserList" asp-controller="Account" class="btn btn-secondary"><i class="fa fa-chevron-left"></i> Back</a>
+<h4>Are you sure you want to delete @Model.UserName?</h4>
+<hr />
+<div class="container">
+    <div class="col-md-8">
+        <dl class="row page-info-color">
+            <dt class="col-sm-2">Username</dt>
+            <dd class="col-sm-10">@Model.UserName</dd>
+        </dl>
     </div>
-</form>
+</div>
+<div>
+    <form asp-controller="Account" asp-action="DeleteConfirmed" method="post">
+        <input type="hidden" asp-for="Id" />
+        <div class="form-group">
+            <button type="submit" value="Confirm Delete" class="btn btn-danger"><i class="fa fa-trash"></i> Delete</button>
+            <a asp-action="UserList" asp-controller="Account" class="btn btn-success"><i class="fa fa-chevron-left"></i> Back</a>
+        </div>
+    </form>
+</div>

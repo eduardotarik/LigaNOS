@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Http;
+using System.ComponentModel.DataAnnotations;
 
 namespace LigaNOS.Models
 {
@@ -11,5 +12,12 @@ namespace LigaNOS.Models
         [Required]
         [Display(Name = "Last Name")]
         public string LastName { get; set; }
+
+        [Display(Name = "Profile Image")]
+        public IFormFile ProfileImage { get; set; }
+
+        public string CurrentProfileImage { get; set; }
+
+        public string UserUpdatedMessage { get; set; }
     }
 }

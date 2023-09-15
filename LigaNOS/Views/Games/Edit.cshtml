@@ -4,14 +4,14 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
+<h1 class="page-title-style">Edit</h1>
 
 <h4>Game</h4>
 <hr />
 <div class="alert alert-danger alert-top" id="alertMessage" style="display:none;">
     Home team and away team cannot be the same.
 </div>
-<div class="row">
+<div class="container">
     <div class="col-md-4 form-container">
         <form asp-action="Edit" id="editGameForm">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>

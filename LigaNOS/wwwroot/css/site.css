@@ -1,6 +1,9 @@
 ﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
 for details on configuring this project to bundle and minify static web assets. */
 
+
+@import url('https://fonts.googleapis.com/css2?family=Arsenal:wght@400;700&display=swap');
+
 /*.navbar {
     background-color: #013440;
     border: none !important;
@@ -47,18 +50,25 @@ a.navbar-brand {
 .navbar-nav .nav-item .nav-link:hover {
     color: #038C17;
 }*/
-
 /* Remove border and box-shadow from the navbar */
+
+* {
+    font-family: 'Arsenal', sans-serif;
+}
+
 .navbar {
+    position: fixed;
+    width: 100%;
     border: none;
     box-shadow: none;
     border-radius: 0;
     background-color: #013440;
     color: #82C0D9;
+    z-index: 100;
 }
 
 /* Remove border and box-shadow from the footer */
-footer.navbar {
+footer navbar {    
     border: none;
     box-shadow: none;
     border-radius: 0;
@@ -102,12 +112,6 @@ footer.navbar-inverse .navbar-nav > li > a:hover {
 .page-title-style {
     color: #013440;
     font-weight: bold;
-    margin: 0;
-}
-
-/* Statistics */
-.statistic-table-margin {
-    margin-bottom: 20px;
 }
 
 /* Info colors */
@@ -119,11 +123,13 @@ footer.navbar-inverse .navbar-nav > li > a:hover {
 .page-info-color dd {
     color: #038C17;
 }
+
 /* Sticky footer styles
 -------------------------------------------------- */
 html {
     font-size: 14px;
 }
+
 @media (min-width: 768px) {
   html {
     font-size: 16px;
@@ -148,10 +154,10 @@ button.accept-policy {
 
 /* Sticky footer styles
 -------------------------------------------------- */
-html {
+/*html {
   position: relative;
-  min-height: 100%;
-}
+  min-height: 105%;
+}*/
 
 body {
     /* Margin bottom by footer height */
@@ -160,6 +166,11 @@ body {
     background-color: #025E73;
     color: #82C0D9;
 }
+
+body, html {
+    height: 125%;
+}
+
 /*.footer {
     position: absolute;
     bottom: 0;
@@ -174,8 +185,10 @@ body {
     margin-bottom: 20px;
 }
 
-.table-container {
-    padding-bottom: 60px;
+.container {
+    padding-top: 80px;
+    flex: 1;
+    margin-bottom: 120px;
 }
 
 /* Forbidden
@@ -185,7 +198,7 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-height: 80vh; /* Set the container height to 100vh */
+    min-height: 80vh; /* Container height to 100vh */
     padding: 20px;
     box-sizing: border-box;
     overflow: hidden;
@@ -406,37 +419,21 @@ body {
 
 /* Buttons placing
 -------------------------------------------------- */
-/* Teams button */
-.teams-header-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px; /* Add some spacing between header and table */
-}
-
 .teams-create-button {
     margin: 0;
 }
 
 /* Games button */
-.games-header-content {
+.header-content {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px; /* Add some spacing between header and table */
+    margin-top: 20px; /* Some spacing between header and table */
 }
 
 .games-create-button {
     margin: 0;
-}
-
-/* Players button */
-.players-header-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px; /* Add some spacing between header and table */
-}
+}}
 
 .players-create-button {
     margin: 0;
@@ -501,7 +498,7 @@ body {
     #games th,
     #games td {
         border-bottom: 1px solid #013440;
-        padding: 8px; /* Add padding for better spacing */
+        padding: 8px; /* Padding for better spacing */
         vertical-align: middle;
     }
 
@@ -527,7 +524,7 @@ body {
     #players th,
     #players td {
         border-bottom: 1px solid #013440;
-        padding: 8px; /* Add padding for better spacing */
+        padding: 8px; /* Padding for better spacing */
         vertical-align: middle;
     }
 
@@ -553,7 +550,7 @@ body {
     #teams th,
     #teams td {
         border-bottom: 1px solid #013440;
-        padding: 8px; /* Add padding for better spacing */
+        padding: 8px; /* Padding for better spacing */
         vertical-align: middle;
     }
 
@@ -574,13 +571,13 @@ body {
 #statistics {
     border-collapse: collapse;
     color: #82C0D9;
-    margin-top: 20px; /* Add some spacing between tables */
+    margin-top: 20px; /* Some spacing between tables */
 }
 
     #statistics th,
     #statistics td {
         border-bottom: 1px solid #013440;
-        padding: 8px; /* Add padding for better spacing */
+        padding: 8px; /* Padding for better spacing */
         vertical-align: middle;
     }
 
@@ -591,6 +588,43 @@ body {
     #statistics tbody tr:hover {
         background-color: #013440;
         color: #038C17;
+    }
+
+/* Statistics table styling */
+#userlist {
+    border-collapse: collapse;
+    color: #82C0D9;
+    margin-top: 20px;
+}
+
+    #userlist th,
+    #userlist td {
+        padding: 8px;
+        vertical-align: middle;
+    }
+
+    #userlist th {
+        border-top: none;
+    }
+
+    #userlist tbody tr {
+        border-bottom: 1px solid #013440; /* Bottom border to each row */
+    }
+
+        #userlist tbody tr:hover {
+            background-color: #013440;
+            color: #038C17;
+        }
+
+/* Style the button row */
+.button-row {
+    display: flex; /* Make the buttons flex items */
+    align-items: center; /* Vertically align the buttons with the table text */
+}
+
+    /* Style the buttons */
+    .button-row .btn {
+        margin-right: 5px; /* Some spacing between buttons */
     }
 
 /* Button background and text colors */
@@ -634,7 +668,7 @@ body {
 
 @media (max-width: 468px) {
     .btn-margin-top {
-        margin-top: 5px; /* Adjust the margin value as needed */
+        margin-top: 5px;
     }
 }
 
@@ -680,6 +714,7 @@ color: #013440;
     display: inline-block;
     vertical-align: middle;
     margin-right: 2px;
+    margin-left: 0.5px;
 }
 
 .yellow-card {
@@ -691,12 +726,55 @@ color: #013440;
     margin-left: 2px;
 }
 
-.red-yellow-card {
+.red-card-away {
+    width: 16px;
+    height: 18px;
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 0.5px;
+    margin-right: 2px;
+}
+
+.yellow-card-away {
+    width: 12px;
+    height: 18px;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 3px;
+    margin-left: 1.5px;
+}
+
+/*.yellow-card {
     width: 12px;
     height: 18px;
     display: inline-block;
     vertical-align: middle;
     margin-left: 1px;
     margin-right: 2px;
+}*/
+
+/*.yellow-card-away {
+    width: 12px;
+    height: 18px;
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 1px;
+    margin-right: 1px;
+}
+*/
+.center-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; 
 }
 
+.centered-h1 {
+    text-align: center; /* Center the text horizontally */
+    margin-left: auto;  /* Set left margin to auto */
+    margin-right: auto; /* Set right margin to auto */
+}
+
+.input-size {
+    width: 400px;
+}

@@ -41,5 +41,9 @@ namespace LigaNOS.Helpers
         Task<IdentityResult> ConfirmEmailAsync(User user, string token);
 
         Task<int> GetAdminUserCountAsync();
+
+        Task<string> GeneratePasswordResetTokenAsync(User user);
+
+        Task<IdentityResult> ResetPasswordAsync(User user, string token, string password);
     }
 }

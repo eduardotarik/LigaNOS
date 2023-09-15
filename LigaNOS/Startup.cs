@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using Syncfusion.Licensing;
 using System.Net;
 using System.Net.Mail;
 using System.Text;
@@ -83,7 +84,7 @@ namespace LigaNOS
 
             services.AddControllersWithViews();
 
-            
+            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("Mgo+DSMBPh8sVXJ2S0d+X1VPd11dXmJWd1p/THNYflR1fV9DaUwxOX1dQl9gSXdSckVrWHpacXRSR2I=");
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

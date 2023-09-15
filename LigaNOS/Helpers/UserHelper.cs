@@ -1,6 +1,7 @@
 ﻿using LigaNOS.Data.Entities;
 using LigaNOS.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.SqlServer.Management.Smo;
 using System.Collections.Generic;
@@ -142,5 +143,14 @@ namespace LigaNOS.Helpers
             return adminCount;
         }
 
+        public async Task<string> GeneratePasswordResetTokenAsync(User user)
+        {
+            return await _userManager.GeneratePasswordResetTokenAsync(user);
+        }
+
+        public async Task<IdentityResult> ResetPasswordAsync(User user, string token, string password)
+        {
+            return await _userManager.ResetPasswordAsync(user, token, password);
+        }
     }
 }
