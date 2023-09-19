@@ -53,5 +53,8 @@ namespace LigaNOS.Data.Entities
             Active,     // Season is active
             Ended       // Season has ended
         }
+
+        public string UserId { get; set; }
+    
     }
 }

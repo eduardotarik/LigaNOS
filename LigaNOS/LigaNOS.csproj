@@ -22,6 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Views\Account\Errors\" />
     <Folder Include="wwwroot\images\emblems\" />
     <Folder Include="wwwroot\images\photos\" />
     <Folder Include="wwwroot\images\pictures\" />

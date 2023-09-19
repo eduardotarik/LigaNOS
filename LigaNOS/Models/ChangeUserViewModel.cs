@@ -19,5 +19,8 @@ namespace LigaNOS.Models
         public string CurrentProfileImage { get; set; }
 
         public string UserUpdatedMessage { get; set; }
+
+        public string Username { get; set; }
+
     }
 }

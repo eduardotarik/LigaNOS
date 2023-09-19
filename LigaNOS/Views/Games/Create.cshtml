@@ -12,14 +12,17 @@
     Home team and away team cannot be the same.
 </div>
 <div class="container">
-    <div class="col-md-4 form-container">
+    <div class="col-md-4 form-position">
         <form asp-action="Edit" id="editGameForm">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             
             <partial name="_Games" />
 
             <div class="form-group">
-                <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Save</button>
+                @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Staff"))
+                {
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Save</button>
+                }
                 <a asp-action="Index" class="btn btn-success"><i class="fa fa-chevron-left"></i> Back</a>
             </div>
         </form>
@@ -30,7 +33,7 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-    <script>
+    @*<script>
         document.getElementById("editGameForm").addEventListener("submit", function (event) {
             var homeTeamSelect = document.getElementById("HomeTeam");
             var awayTeamSelect = document.getElementById("AwayTeam");
@@ -40,5 +43,5 @@
                 document.getElementById("alertMessage").style.display = "block";
             }
         });
-    </script>
+    </script>*@
 }

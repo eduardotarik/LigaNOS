@@ -1,38 +1,40 @@
 ﻿@model LigaNOS.Models.TeamViewModel
 
-<div class="form-group">
-    <label asp-for="ImageFile" class="control-label"></label>
-    <input asp-for="ImageFile" class="form-control" type="file" />
-    <span asp-validation-for="ImageFile" class="text-danger"></span>
-</div>
+<div class="form-position">
+    @*<div class="form-group">
+        <label asp-for="ImageFile" class="control-label"></label>
+        <input asp-for="ImageFile" class="form-control input-color" type="file" />
+        <span asp-validation-for="ImageFile" class="text-danger"></span>
+    </div>*@
 
-<@*div class="form-group">
-    <label for="uploadFiles">Upload Emblem</label>
-    <ejs-uploader id="uploadFiles" autoUpload="false"></ejs-uploader>
-</div>*@
+    <div class="form-group">
+        <label for="ImageFile">Upload Emblem</label>
+        <ejs-uploader id="ImageFile" autoUpload="false"></ejs-uploader>
+    </div>
 
-<div class="form-group">
-    <label asp-for="Name" class="control-label"></label>
-    <input asp-for="Name" class="form-control" />
-    <span asp-validation-for="Name" class="text-danger"></span>
-</div>
-<div class="form-group">
-    <label asp-for="Founded" class="control-label"></label>
-    <input asp-for="Founded" class="form-control" />
-    <span asp-validation-for="Founded" class="text-danger"></span>
-</div>
-<div class="form-group">
-    <label asp-for="Country" class="control-label"></label>
-    <input asp-for="Country" class="form-control" />
-    <span asp-validation-for="Country" class="text-danger"></span>
-</div>
-<div class="form-group">
-    <label asp-for="City" class="control-label"></label>
-    <input asp-for="City" class="form-control" />
-    <span asp-validation-for="City" class="text-danger"></span>
-</div>
-<div class="form-group">
-    <label asp-for="Stadium" class="control-label"></label>
-    <input asp-for="Stadium" class="form-control" />
-    <span asp-validation-for="Stadium" class="text-danger"></span>
+    <div class="form-group">
+        <label asp-for="Name" class="control-label"></label>
+        <input asp-for="Name" class="form-control input-color" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Founded" class="control-label"></label>
+        <input asp-for="Founded" class="form-control input-color" />
+        <span asp-validation-for="Founded" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Country" class="control-label"></label>
+        <input asp-for="Country" class="form-control input-color" />
+        <span asp-validation-for="Country" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="City" class="control-label"></label>
+        <input asp-for="City" class="form-control input-color" />
+        <span asp-validation-for="City" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Stadium" class="control-label"></label>
+        <input asp-for="Stadium" class="form-control input-color" />
+        <span asp-validation-for="Stadium" class="text-danger"></span>
+    </div>
 </div>

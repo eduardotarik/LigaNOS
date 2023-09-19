@@ -36,11 +36,34 @@
         overflow: hidden;
     }
 
+    .link-color {
+        color: #038C17;
+        text-decoration: none;
+    }
+        
+    .link-color:hover {
+        color: #025918;
+    }
+
 </style>
 
 @model LigaNOS.Models.LoginViewModel
 @{
     ViewData["Title"] = "Login";
+}
+
+@if (!string.IsNullOrEmpty(ViewBag.SuccessMessage))
+{
+    <div class="alert alert-success">
+        @ViewBag.SuccessMessage
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(ViewBag.ErrorMessage))
+{
+    <div class="alert alert-danger">
+        @ViewBag.ErrorMessage
+    </div>
 }
 
 <div class="content-container">
@@ -53,24 +76,25 @@
                 <div asp-validation-summary="ModelOnly"></div>
                 <div class="form-group">
                     <label asp-for="Username">Email</label>
-                    <input asp-for="Username" class="form-control" />
+                    <input asp-for="Username" class="form-control input-color  />
                     <span asp-validation-for="Username" class="text-warning"></span>
                 </div>
                 <div class="form-group">
                     <label asp-for="Password">Password</label>
-                    <input asp-for="Password" type="password" class="form-control" />
+                    <input asp-for="Password" type="password" class="form-control input-color" />
                     <span asp-validation-for="Password" class="text-warning"></span>
                 </div>
                 <div class="form-group">
                     <div class="form-check">
                         <input asp-for="RememberMe" type="checkbox" class="form-check-input" />
-                        <label asp-for="RememberMe" class="form-check-label">Remember Me?</label>
+                        <label asp-for="RememberMe" class="form-check-label input-color">Remember Me?</label>
                         <span asp-validation-for="RememberMe" class="text-warning"></span>
-                        <a asp-action="RecoverPassword" class="btn btn-link position">Forgot Password?</a>
+                        <a asp-action="RecoverPassword" class="btn btn-link position link-color">Forgot Password?</a>
                     </div>
                 </div>
                 <div class="button form-group">
                     <button type="submit" class="btn btn-success"><i class="fas fa-right-to-bracket"></i> Enter</button>
+                    <a asp-controller="Account" asp-action="RegistrationRequest" class="btn btn-success">Registration Request</a>
                 </div>         
             </form>
         </div>

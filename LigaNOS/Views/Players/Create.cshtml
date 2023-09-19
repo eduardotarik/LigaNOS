@@ -9,15 +9,18 @@
 <h4>Player</h4>
 <hr />
 <div class="container">
-    <div class="col-md-4">
+    <div class="col-md-4 form-position">
         <form asp-action="Create" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             
             <partial name="_Players" />
 
             <div class="form-group">
-                <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Save</button>
-                <a asp-action="Index" class="btn btn-success"><i class="fa fa-chevron-left"></i> Back</a>
+                @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Team"))
+                {
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Save</button>
+                    <a asp-action="Index" class="btn btn-success"><i class="fa fa-chevron-left"></i> Back</a>
+                }
             </div>
         </form>
     </div>

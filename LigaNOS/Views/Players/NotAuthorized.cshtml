@@ -1,0 +1,13 @@
+﻿@{
+    ViewData["Title"] = "NotAuthorized";
+    Layout = "_Layout";
+}
+
+<body>
+    <div class="forbidden-container">
+        <img src="~/images/forbidden/notauthorized.png" alt="Image" class="forbidden-img" />
+        <h1 class="forbidden-text">Forbidden</h1>
+        <p><a href="@Url.Action("Index", "Home")">Go Back to Home</a></p>
+        <p class="access-denied-text">Access Denied</p>
+    </div>
+</body>

@@ -37,21 +37,19 @@
             var roles = userWithRoles.Roles;
             <tr>
                 <td>
-                    @if (user.ProfileImage == null)
-                    {
-                        <div style="width: 100px; height: 100px; overflow: hidden; border-radius: 50%; margin: 0 auto;">
-                            <img src="~/images/no_image.png" alt="Default Profile Image" style="display: block; width: 100%; height: 100%; object-fit: cover;" />
-                        </div>
+                        @if (user.ProfileImage == null)
+                        {
+                            <div style="width: 100px; height: 100px; overflow: hidden; border-radius: 50%; margin: 0 auto;">
+                                <img src="~/images/no_image.png" alt="Default Profile Image" style="display: block; width: 100%; height: 100%; object-fit: cover;" />
+                            </div>
 
-                    }
-                    else
-                    {
+                        }
+                        else
+                        {
                             <div style="width: 100px; height: 100px; overflow: hidden; border-radius: 50%; margin: 0 auto;">
                                 <img src="@Url.Content("~/images/photos/" + user.ProfileImage)" alt="Profile Image" style="display: block; width: 100%; height: 100%; object-fit: cover;" />
                             </div>
-
-
-                    }
+                        }
                 </td>
                 <td>@user.UserName</td>
                 <td>@($"{user.FirstName} {user.LastName}")</td>
@@ -60,12 +58,15 @@
                 </td>
                 <td>
                     <div class="button-row">
-                        <a asp-controller="Account" asp-action="Edit" asp-route-id="@user.Id" class="btn btn-primary rounded adjusted-icon btn-margin-right"><i class="fa fa-edit"></i></a>
-                        <form asp-controller="Account" asp-action="Delete" method="post">
-                            <input type="hidden" name="userId" value="@user.Id" />
-                            <button type="submit" class="btn btn-danger rounded adjusted-icon btn-margin-right"><i class="fa fa-trash"></i></button>
-                        </form>
-                        <a asp-controller="Account" asp-action="Details" asp-route-id="@user.Id" class="btn btn-info rounded adjusted-icon"><i class="fa fa-info-circle"></i></a>
+                            @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin"))
+                            {
+                                <a asp-controller="Account" asp-action="Edit" asp-route-id="@user.Id" class="btn btn-primary rounded adjusted-icon btn-margin-right"><i class="fa fa-edit"></i></a>
+                                <form asp-controller="Account" asp-action="Delete" method="post">
+                                    <input type="hidden" name="userId" value="@user.Id" />
+                                    <button type="submit" class="btn btn-danger rounded adjusted-icon btn-margin-right"><i class="fa fa-trash"></i></button>
+                                </form>
+                            }
+    
                     </div>
                 </td>
 

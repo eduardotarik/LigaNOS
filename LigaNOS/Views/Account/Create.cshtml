@@ -23,61 +23,61 @@
 }
 
 <div class="container">
-    <div class="col-md-4 offset-md-4">
+    <div class="col-md-4 form-position">
         @using (Html.BeginForm("Create", "Account", FormMethod.Post, new { enctype = "multipart/form-data" }))
         {
             @Html.AntiForgeryToken()
 
             <div class="form-group">
                 @Html.LabelFor(model => model.FirstName)
-                @Html.TextBoxFor(model => model.FirstName, new { @class = "form-control" })
+                @Html.TextBoxFor(model => model.FirstName, new { @class = "form-control input-color" })
                 @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-warning" })
             </div>
 
             <div class="form-group">
                 @Html.LabelFor(model => model.LastName)
-                @Html.TextBoxFor(model => model.LastName, new { @class = "form-control" })
+                @Html.TextBoxFor(model => model.LastName, new { @class = "form-control input-color" })
                 @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-warning" })
             </div>
 
-            <div class="form-group">
-                <label asp-for="ProfileImage" class="control-label"></label>
-                <input asp-for="ProfileImage" class="form-control" type="file" />
-                <span asp-validation-for="ProfileImage" class="text-danger"></span>
-            </div>
-
             @*<div class="form-group">
-                <label for="uploadFiles">Upload Profile Image</label>
-                <ejs-uploader id="uploadFiles" autoUpload="false"></ejs-uploader>
+                <label asp-for="ProfileImage" class="control-label"></label>
+                <input asp-for="ProfileImage" class="form-control input-color" type="file" />
+                <span asp-validation-for="ProfileImage" class="text-danger"></span>
             </div>*@
 
             <div class="form-group">
+                <label for="ProfileImage">Upload Profile Image</label>
+                <ejs-uploader id="ProfileImage" autoUpload="false"></ejs-uploader>
+            </div>
+
+            <div class="form-group">
                 @Html.LabelFor(model => model.Username)
-                @Html.TextBoxFor(model => model.Username, new { @class = "form-control" })
+                @Html.TextBoxFor(model => model.Username, new { @class = "form-control input-color" })
                 @Html.ValidationMessageFor(model => model.Username, "", new { @class = "text-warning" })
             </div>
 
             <div class="form-group">
                 @Html.LabelFor(model => model.Email)
-                @Html.TextBoxFor(model => model.Email, new { @class = "form-control" })
+                @Html.TextBoxFor(model => model.Email, new { @class = "form-control input-color" })
                 @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-warning" })
             </div>
 
             <div class="form-group">
                 @Html.LabelFor(model => model.Password)
-                @Html.PasswordFor(model => model.Password, new { @class = "form-control" })
+                @Html.PasswordFor(model => model.Password, new { @class = "form-control input-color" })
                 @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-warning" })
             </div>
 
             <div class="form-group">
                 @Html.LabelFor(model => model.ConfirmPassword)
-                @Html.PasswordFor(model => model.ConfirmPassword, new { @class = "form-control" })
+                @Html.PasswordFor(model => model.ConfirmPassword, new { @class = "form-control input-color" })
                 @Html.ValidationMessageFor(model => model.ConfirmPassword, "", new { @class = "text-warning" })
             </div>
 
             <div class="form-group">
                 @Html.LabelFor(model => model.SelectedRole)
-                @Html.DropDownListFor(model => model.SelectedRole, (SelectList)ViewBag.Roles, "Select a role", new { @class = "form-control" })
+                @Html.DropDownListFor(model => model.SelectedRole, (SelectList)ViewBag.Roles, "Select a role", new { @class = "form-control input-color" })
                 @Html.ValidationMessageFor(model => model.SelectedRole, "", new { @class = "text-warning" })
             </div>
 

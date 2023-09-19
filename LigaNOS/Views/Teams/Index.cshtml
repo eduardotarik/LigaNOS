@@ -44,10 +44,13 @@
             {
                 <tr>
                     <td>
-                        @if (!string.IsNullOrEmpty(item.ImageFullPath))
-                        {
-                            <img src="@Url.Content(item.ImageFullPath)" alt="Emblem" style="display: block; margin: 0 auto; width: 100px; height: 100px; max-width: 100%; height: auto ">
-                        }
+                            @if (!string.IsNullOrEmpty(item.ImageFullPath))
+                            {
+                            <div style="width: 100px; height: 100px; overflow: hidden; border-radius: 50%;">
+                                <img src="@Url.Content(item.ImageFullPath)" alt="Emblem"
+                                     style="display: block; width: 100%; height: 100%; object-fit: cover;" />
+                            </div>
+                            }
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Name)

@@ -6,54 +6,62 @@
 
 <h1 class="page-title-style">Delete</h1>
 
-<h4><p>Are you sure you want to delete the user '@Model.Name'?</p></h4>
-<hr />
-<div class="container">
-    <div class="col-md-8">
-        <dl class="row page-info-color">
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.Name)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Name)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.Founded)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Founded)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.Country)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Country)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.City)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.City)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.Stadium)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Stadium)
-            </dd>
-        </dl>
-    </div>
-    <div class="col-md-4">
-        <img src="@Url.Content(Model.ImageFullPath)" alt="Picture" class="img-fluid" style="max-width: 100%;">
+<div>
+    <h4>Are you sure you want to delete the user '@Model.Name'?</h4>
+    <hr />
+    <div>
+        <div class="col-md-8">
+            <dl class="row page-info-color general-dl">
+                <dt class="col-sm-2 general-dt">
+                    @Html.DisplayNameFor(model => model.Name)
+                </dt>
+                <dd class="col-sm-10 general-dd">
+                    @Html.DisplayFor(model => model.Name)
+                </dd>
+                <dt class="col-sm-2 general-dt">
+                    @Html.DisplayNameFor(model => model.Founded)
+                </dt>
+                <dd class="col-sm-10 general-dd">
+                    @Html.DisplayFor(model => model.Founded)
+                </dd>
+                <dt class="col-sm-2 general-dt">
+                    @Html.DisplayNameFor(model => model.Country)
+                </dt>
+                <dd class="col-sm-10 general-dd">
+                    @Html.DisplayFor(model => model.Country)
+                </dd>
+                <dt class="col-sm-2 general-dt">
+                    @Html.DisplayNameFor(model => model.City)
+                </dt>
+                <dd class="col-sm-10 general-dd">
+                    @Html.DisplayFor(model => model.City)
+                </dd>
+                <dt class="col-sm-2 general-dt">
+                    @Html.DisplayNameFor(model => model.Stadium)
+                </dt>
+                <dd class="col-sm-10 general-dd">
+                    @Html.DisplayFor(model => model.Stadium)
+                </dd>
+            </dl>
+        </div>
+        <div class="col-md-4">
+            <img src="@Url.Content(Model.ImageFullPath)" alt="Picture" style="width: 300px; height: 300px; max-width: 100%; border-radius: 50%;" />
+        </div>
+
     </div>
 </div>
 
-<div style="height: 120px; overflow-y: auto;">
-    <form asp-action="Delete">
-        <input type="hidden" asp-for="Id" />
-        <button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i> Delete</button>
-        <a asp-action="Index" class="btn btn-success"><i class="fa fa-chevron-left"></i> Back</a>
-    </form>
+<div>
+    @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin"))
+    {
+        <form asp-action="Delete">
+            <input type="hidden" asp-for="Id" />
+            <button type="submit" class="btn btn-danger btn-pos"><i class="fa fa-trash"></i> Delete</button>
+            <a asp-action="Index" class="btn btn-success btn-pos"><i class="fa fa-chevron-left"></i> Back</a>
+        </form>
+    }
+    
+    
 </div>
 
 

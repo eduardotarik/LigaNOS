@@ -4,14 +4,16 @@ using LigaNOS.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace LigaNOS.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230916054602_AddedRegistrationRequest")]
+    partial class AddedRegistrationRequest
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -380,9 +382,8 @@ namespace LigaNOS.Migrations
             modelBuilder.Entity("LigaNOS.Data.Entities.Game", b =>
                 {
                     b.HasOne("LigaNOS.Data.Entities.User", "User")
-                        .WithMany("Games")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .WithMany()
+                        .HasForeignKey("UserId");
 
                     b.Navigation("User");
                 });
@@ -390,7 +391,7 @@ namespace LigaNOS.Migrations
             modelBuilder.Entity("LigaNOS.Data.Entities.Player", b =>
                 {
                     b.HasOne("LigaNOS.Data.Entities.User", "User")
-                        .WithMany("Players")
+                        .WithMany()
                         .HasForeignKey("UserId");
 
                     b.Navigation("User");
@@ -399,7 +400,7 @@ namespace LigaNOS.Migrations
             modelBuilder.Entity("LigaNOS.Data.Entities.Team", b =>
                 {
                     b.HasOne("LigaNOS.Data.Entities.User", "User")
-                        .WithMany("Teams")
+                        .WithMany()
                         .HasForeignKey("UserId");
 
                     b.Navigation("User");
@@ -454,15 +455,6 @@ namespace LigaNOS.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("LigaNOS.Data.Entities.User", b =>
-                {
-                    b.Navigation("Games");
-
-                    b.Navigation("Players");
-
-                    b.Navigation("Teams");
                 });
 #pragma warning restore 612, 618
         }

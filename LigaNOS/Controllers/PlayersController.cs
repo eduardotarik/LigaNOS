@@ -60,6 +60,13 @@ namespace LigaNOS.Controllers
         // GET: Players/Create
         public IActionResult Create()
         {
+            // Check if the user is a team member
+            if (!User.IsInRole("Team") || !User.IsInRole("Admin"))
+            {
+                // If the user is not a team member, return the "NotAuthorized" view
+                return View("NotAuthorized");
+            }
+
             // Fetch the teams from the repository and populate the ViewBag.Teams
             var teams = _teamRepository.GetAll().ToList();
             ViewBag.Teams = new SelectList(teams, "Name", "Name");
@@ -108,6 +115,13 @@ namespace LigaNOS.Controllers
         // GET: Players/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            // Check if the user is a team member
+            if (!User.IsInRole("Team") || !User.IsInRole("Admin"))
+            {
+                // If the user is not a team member, return the "NotAuthorized" view
+                return View("NotAuthorized");
+            }
+
             if (id == null)
             {
                 return View("PlayerNotFound");
@@ -183,6 +197,13 @@ namespace LigaNOS.Controllers
         // GET: Players/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            // Check if the user is a team member
+            if (!User.IsInRole("Team") || !User.IsInRole("Admin"))
+            {
+                // If the user is not a team member, return the "NotAuthorized" view
+                return View("NotAuthorized");
+            }
+
             if (id == null)
             {
                 return View("PlayerNotFound");
@@ -208,6 +229,11 @@ namespace LigaNOS.Controllers
         }
 
         public IActionResult PlayerNotFound()
+        {
+            return View();
+        }
+
+        public IActionResult NotAuthorized()
         {
             return View();
         }

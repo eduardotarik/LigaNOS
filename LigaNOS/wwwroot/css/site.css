@@ -4,54 +4,6 @@ for details on configuring this project to bundle and minify static web assets. 
 
 @import url('https://fonts.googleapis.com/css2?family=Arsenal:wght@400;700&display=swap');
 
-/*.navbar {
-    background-color: #013440;
-    border: none !important;
-    height: 80px;
-    padding: 5px 0;
-}
-
-.navbar-nav .nav-item .nav-link {
-    color: #82C0D9;
-}
-
-a {
-    color: #038C17;
-}
-
-a:hover {
-    color: #038C17;
-    text-decoration: none;
-}
-
-a.navbar-brand {
-  white-space: normal;
-  text-align: center;
-  word-break: break-all;
-}
-
-.navbar-nav .nav-link {
-    color: #038C17;
-}
-
-.btn-primary {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
-}
-
-.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
-    color: #038C17;
-    background-color: #1b6ec2;
-    border-color: #038C17;
-}
-
- Change navbar item color on hover 
-.navbar-nav .nav-item .nav-link:hover {
-    color: #038C17;
-}*/
-/* Remove border and box-shadow from the navbar */
-
 * {
     font-family: 'Arsenal', sans-serif;
 }
@@ -124,6 +76,11 @@ footer.navbar-inverse .navbar-nav > li > a:hover {
     color: #038C17;
 }
 
+.cover {
+    width: 300px;
+    height: 400px;
+}
+
 /* Sticky footer styles
 -------------------------------------------------- */
 html {
@@ -189,6 +146,73 @@ body, html {
     padding-top: 80px;
     flex: 1;
     margin-bottom: 120px;
+}
+
+.games-container {
+    padding-top: 80px;
+    flex: 1;
+    margin-bottom: 105px;
+}
+
+/* Game detail and delete */
+.custom-dl {
+    margin-top: -50px;
+    font-size: 20px;
+}
+
+.custom-dd {
+    width: 90%;
+    margin-left: 200px;
+    margin-top: -30px;
+}
+
+.custom-dt {
+    width: 20%;
+    margin-left: 20px;
+}
+
+/* Game form position */
+.form-position {
+    margin-top: -35px;
+}
+
+/* Game input color */
+.input-color {
+    color: #013440;
+    font-weight: bold;
+}
+
+.form-check-input {
+    position: relative;
+    top: 2px;
+}
+
+.games-btn-pos {
+    margin-top: 70px;
+}
+
+/* General dl, dt, dd and buttons */
+.general-dl {
+    font-size: 20px;
+}
+
+.general-dt {
+    width: 20%;
+    margin-left: 20px;
+}
+
+.general-dd {
+    width: 90%;
+    margin-left: 200px;
+    margin-top: -28px;
+}
+
+.btn-pos {
+    margin-top: 110px;
+}
+
+.user-btn-pos {
+    margin-top: 70px;
 }
 
 /* Forbidden
@@ -731,8 +755,8 @@ color: #013440;
     height: 18px;
     display: inline-block;
     vertical-align: middle;
-    margin-left: 0.5px;
     margin-right: 2px;
+    margin-left: 0.5px;
 }
 
 .yellow-card-away {
@@ -740,8 +764,8 @@ color: #013440;
     height: 18px;
     display: inline-block;
     vertical-align: middle;
-    margin-right: 3px;
-    margin-left: 1.5px;
+    margin-right: 2px;
+    margin-left: 2px;
 }
 
 /*.yellow-card {

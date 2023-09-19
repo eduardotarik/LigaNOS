@@ -21,13 +21,10 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using User = LigaNOS.Data.Entities.User;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.SqlServer.Management.Smo;
-using Microsoft.AspNetCore.Razor.Language.Intermediate;
 
 namespace LigaNOS.Controllers
 {
-    
+
     public class AccountController : Controller
     {
         private readonly IUserHelper _userHelper;
@@ -187,8 +184,8 @@ namespace LigaNOS.Controllers
                     // Generate email confirmation token
                     var emailConfirmationToken = await _userHelper.GenerateEmailConfirmationTokenAsync(user);
 
-                    // Create confirmation link
-                    var confirmationLink = Url.Action("ConfirmEmail", "Account", new
+                    // Create confirmation link with the custom redirectToReset parameter
+                    var recoverPasswordUrl = Url.Action("RecoverPassword", "Account", new
                     {
                         userId = user.Id,
                         token = emailConfirmationToken
@@ -244,6 +241,11 @@ namespace LigaNOS.Controllers
             return View(user);
         }
 
+        private bool IsDefaultAdmin(User user)
+        {
+            return user.UserName == "eduardo@gmail.com";
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         [RoleAuthorization("Admin")]
@@ -251,8 +253,29 @@ namespace LigaNOS.Controllers
         {
             var user = await _userHelper.GetUserByIdAsync(Id);
 
+            bool isDefaultAdmin = IsDefaultAdmin(user);
+
+            if (isDefaultAdmin)
+            {
+                // Set an error message indicating that the default admin cannot be deleted
+                TempData["AdminDeleteErrorMessage"] = "The default admin cannot be deleted.";
+                return RedirectToAction("UserList", "Account"); // Redirect to the UserList action
+            }
+
+            // Check for associated records in the "Games" table (replace "SomeUserIdProperty" with the actual property name)
+            bool gamesAssociatedRecords = _context.Games.Any(g => g.UserId == user.Id);
+
+            bool playersAssociatedRecords = _context.Players.Any(p => p.UserId == user.Id);
+
+            bool teamsAssociatedRecords = _context.Teams.Any(t => t.UserId == user.Id);
+
+
+            // Continue with the rest of your code...
+
             if (user != null)
             {
+                var loggedInUser = await _userManager.GetUserAsync(User);
+
                 // Check if the user is an admin and if there is only one admin user remaining
                 if (await _userManager.IsInRoleAsync(user, "Admin") && await _userHelper.GetAdminUserCountAsync() <= 1)
                 {
@@ -261,23 +284,23 @@ namespace LigaNOS.Controllers
                     return RedirectToAction("UserList", "Account"); // Redirect to the UserList action
                 }
 
-                var loggedInUser = await _userManager.GetUserAsync(User);
-
-                if (await _userManager.IsInRoleAsync(user, "Admin"))
+                if (loggedInUser.Id == user.Id)
                 {
-                    _logger.LogInformation("User is in 'Admin' role.");
-
-                    if (loggedInUser.Id == user.Id)
-                    {
-                        _logger.LogInformation("User is trying to delete themselves as an admin.");
-
-                        TempData["AdminDeleteErrorMessage"] = "You cannot delete yourself as an admin.";
-                        return RedirectToAction("UserList", "Account");
-                    }
+                    // Set error message if the user is trying to delete themselves as an admin
+                    TempData["AdminDeleteErrorMessage"] = "You cannot delete yourself as an admin.";
+                    return RedirectToAction("UserList", "Account");
                 }
 
                 var deletedUsername = user.UserName; // Store the username before deletion
 
+                if (gamesAssociatedRecords || playersAssociatedRecords || teamsAssociatedRecords)
+                {
+                    // Set an error message indicating that the user has associated records and cannot be deleted
+                    TempData["AdminDeleteErrorMessage"] = $"Cannot delete user '{deletedUsername}' because they have associated records.";
+                    return RedirectToAction("UserList", "Account"); // Redirect to the UserList action or another appropriate action
+                }
+
+                // Here, you can delete the user
                 var result = await _userHelper.DeleteUserAsync(user);
 
                 if (result.Succeeded)
@@ -310,6 +333,16 @@ namespace LigaNOS.Controllers
             return View("Delete", user);
         }
 
+
+
+        // Check if the user is the default admin user based on their username
+        private bool IsDefaultAdminUser(User user)
+        {
+            // You can modify this condition to match the username of your default admin user
+            return _userManager.IsInRoleAsync(user, "DefaultAdminRoleName").Result;
+        }
+
+
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UserList()
         {
@@ -325,16 +358,27 @@ namespace LigaNOS.Controllers
                 {
                     User = user,
                     Roles = roles.ToList(),
-                    UserListUrl = currentUrl // Pass the URL to the view model
+                    UserListUrl = currentUrl // URL to the view model
                 });
             }
 
             return View(usersWithRoles);
         }
 
+        [RoleAuthorization("Admin", "Team", "Staff")]
         [HttpGet]
         public async Task<IActionResult> ChangeUser()
         {
+            if (TempData.ContainsKey("SuccessMessage"))
+            {
+                ViewBag.SuccessMessage = TempData["SuccessMessage"];
+            }
+
+            if (TempData.ContainsKey("ErrorMessage"))
+            {
+                ViewBag.ErrorMessage = TempData["ErrorMessage"];
+            }
+
             var user = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
             var model = new ChangeUserViewModel
             {
@@ -381,7 +425,7 @@ namespace LigaNOS.Controllers
 
                     if (result.Succeeded)
                     {
-                        // Set the success message in the view model
+                        // Success message in the view model
                         model.UserUpdatedMessage = "User information updated successfully. Click on your username to see the changes!";
 
                         // Return the updated model to display the updated information
@@ -402,9 +446,6 @@ namespace LigaNOS.Controllers
             return View(model);
         }
 
-
-
-
         public IActionResult ChangePassword()
         {
             return View();
@@ -421,21 +462,27 @@ namespace LigaNOS.Controllers
                     var result = await _userHelper.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
                     if (result.Succeeded)
                     {
-                        return this.RedirectToAction("ChangeUser");
+                        TempData["SuccessMessage"] = "Password updated successfully.";
                     }
                     else
                     {
-                        this.ModelState.AddModelError(string.Empty, result.Errors.FirstOrDefault().Description);
+                        foreach (var error in result.Errors)
+                        {
+                            ModelState.AddModelError(string.Empty, error.Description);
+                        }
+
+                        TempData["ErrorMessage"] = "Password update failed.";
                     }
                 }
                 else
                 {
-                    this.ModelState.AddModelError(string.Empty, "User not found.");
+                    ModelState.AddModelError(string.Empty, "User not found.");
                 }
             }
 
-            return this.View(model);
+            return RedirectToAction("ChangeUser");
         }
+
 
         [HttpPost]
         public async Task<IActionResult> CreateToken([FromBody] LoginViewModel model)
@@ -498,7 +545,11 @@ namespace LigaNOS.Controllers
                 return NotFound();
             }
 
-            return View();
+            // Generate a password reset token for the user
+            var resetPasswordToken = await _userHelper.GeneratePasswordResetTokenAsync(user);
+
+            // Redirect the user to the ResetPassword action with the user's ID and reset password token as query parameters
+            return RedirectToAction("ResetPassword", new { userId = user.Id, token = resetPasswordToken });
         }
 
         public IActionResult NotAuthorized()
@@ -710,20 +761,26 @@ namespace LigaNOS.Controllers
                 Response response = await _mailHelper.SendEmail(model.Email, "Account Password Reset", $"<h1>Account Password Reset</h1>" +
                     $"To reset the password, click the link:</br></br>" +
                     $"<a href = \"{link}\">Reset Password</a>");
-                        
+
                 if (response.IsSuccess)
                 {
-                    this.ViewBag.Message = "The instructions to recover your password have been sent to email.";
-                    return View(model);
+                    TempData["SuccessMessage"] = "The instructions to recover your password have been sent to your email.";
+                    return RedirectToAction("RecoverPasswordConfirmation"); // Redirect to a confirmation view
                 }
 
-                this.ViewBag.Message = "Error while resetting the password!";
-                return View(model);
+                TempData["ErrorMessage"] = "Error while resetting the password!";
+                return RedirectToAction("RecoverPasswordConfirmation"); // Redirect to a confirmation view
             }
 
-            this.ViewBag.Message = "User not found!";
+            TempData["ErrorMessage"] = "User not found!";
             return View(model);
         }
+
+        public IActionResult RecoverPasswordConfirmation()
+        {
+            return View();
+        }
+
 
         public IActionResult ResetPassword(string token)
         {
@@ -739,15 +796,77 @@ namespace LigaNOS.Controllers
                 var result = await _userHelper.ResetPasswordAsync(user, model.Token, model.Password);
                 if (result.Succeeded)
                 {
-                    this.ViewBag.Message = "Password reset successful.";
-                    return View();
+                    TempData["SuccessMessage"] = "Password reset successful.";
+
+                    // Remove the error message if it exists
+                    TempData.Remove("ErrorMessage");
+
+                    // Return the view instead of JSON
+                    return View(model);
                 }
 
-                this.ViewBag.Message = "Error while reseting the password.";
+                TempData["ErrorMessage"] = "Error while resetting the password.";
                 return View(model);
             }
-            this.ViewBag.Message = "User not found.";
+
+            TempData["ErrorMessage"] = "User not found.";
             return View(model);
         }
+
+        public IActionResult RegistrationRequestConfirmation()
+        {
+            return View();
+        }
+
+
+        [AllowAnonymous]
+        public IActionResult RegistrationRequest()
+        {
+            var model = new AccountRegistrationRequestViewModel();
+            return View(model);
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RegistrationRequest(AccountRegistrationRequestViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                // Create a registration request entity and save it to the database
+                var registrationRequest = new RegistrationRequest
+                {
+                    FirstName = model.FirstName,
+                    LastName = model.LastName,
+                    Username = model.Username,
+                    Email = model.Email,
+                    // Set other properties as needed
+                };
+
+                // Save the registration request to your DataContext
+                _context.RegistrationRequests.Add(registrationRequest);
+                await _context.SaveChangesAsync();
+
+                // Notify the admin about the new registration request (send an email)
+                await SendRegistrationRequestEmail(registrationRequest);
+
+                // Redirect the user to a confirmation page or show a thank you message
+                return RedirectToAction("RegistrationRequestConfirmation");
+            }
+
+            return View(model);
+        }
+
+        private async Task SendRegistrationRequestEmail(RegistrationRequest request)
+        {
+            var adminEmail = "tarikeduardo3@gmail.com"; // Replace with your admin's email address
+            var subject = "New Registration Request";
+            var message = $"You have received a new registration request from {request.FirstName} {request.LastName}. Email: {request.Email}.";
+
+            // Use your mail helper to send the email to the admin
+            await _mailHelper.SendEmail(adminEmail, subject, message);
+        }
+
+
     }
 }

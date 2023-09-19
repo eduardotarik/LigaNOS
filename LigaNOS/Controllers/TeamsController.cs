@@ -53,9 +53,14 @@ namespace LigaNOS.Controllers
         }
 
         // GET: Teams/Create
-        [Authorize]
         public IActionResult Create()
         {
+            if (!User.IsInRole("Admin"))
+            {
+                // If the user is not an admin, return the "NotAuthorized" view
+                return View("NotAuthorized");
+            }
+
             return View();
         }
 
@@ -97,6 +102,12 @@ namespace LigaNOS.Controllers
         // GET: Teams/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            if (!User.IsInRole("Admin"))
+            {
+                // If the user is not an admin, return the "NotAuthorized" view
+                return View("NotAuthorized");
+            }
+
             if (id == null)
             {
                 return View("TeamNotFound");
@@ -174,6 +185,13 @@ namespace LigaNOS.Controllers
         // GET: Teams/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            // Check if the user is an admin
+            if (!User.IsInRole("Admin"))
+            {
+                // If the user is not an admin, return the "NotAuthorized" view
+                return View("NotAuthorized");
+            }
+
             if (id == null)
             {
                 return View("TeamNotFound");
@@ -199,6 +217,11 @@ namespace LigaNOS.Controllers
         }
 
         public IActionResult TeamNotFound()
+        {
+            return View();
+        }
+
+        public IActionResult NotAuthorized()
         {
             return View();
         }

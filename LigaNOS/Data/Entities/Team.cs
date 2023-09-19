@@ -25,6 +25,8 @@ namespace LigaNOS.Data.Entities
 
         public string Stadium { get; set; }
 
+        public string UserId { get; set; }
+
         public User User { get; set; }
 
         public string ImageFullPath => ImageId == Guid.Empty

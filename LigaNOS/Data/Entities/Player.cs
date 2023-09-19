@@ -23,6 +23,8 @@ namespace LigaNOS.Data.Entities
         [Display(Name = "Team Name")]
         public string TeamName { get; set; }
 
+        public string UserId { get; set; }
+
         public User User { get; set; }
 
         public string ImageFullPath => PictureId == Guid.Empty

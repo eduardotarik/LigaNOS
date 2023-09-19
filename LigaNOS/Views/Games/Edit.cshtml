@@ -6,28 +6,31 @@
 
 <h1 class="page-title-style">Edit</h1>
 
-<h4>Game</h4>
-<hr />
 <div class="alert alert-danger alert-top" id="alertMessage" style="display:none;">
     Home team and away team cannot be the same.
 </div>
-<div class="container">
-    <div class="col-md-4 form-container">
-        <form asp-action="Edit" id="editGameForm">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+<div>
+    <h4>Game</h4>
+    <hr />
+    <div class="container">
+        <div class="col-md-4 form-position">
+            <form asp-action="Edit" id="editGameForm">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             
-            <partial name="_Games" />
+                <partial name="_Games" />
 
-            <div class="form-group">
-                @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin"))
-                {
-                    <button type="submit" value="Save" class="btn btn-primary"><i class="fa fa-save"></i> Save</button>
-                }
+                <div class="form-group">
+                    @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Staff") || this.User.IsInRole("Admin"))
+                    {
+                        <button type="submit" value="Save" class="btn btn-primary"><i class="fa fa-save"></i> Save</button>
+                    }
 
-                <a asp-action="Index" class="btn btn-success"><i class="fa fa-chevron-left"></i> Back</a>
+                    <a asp-action="Index" class="btn btn-success"><i class="fa fa-chevron-left"></i> Back</a>
 
-            </div>
-        </form>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
@@ -35,7 +38,7 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-    <script>
+    @*<script>
         document.getElementById("editGameForm").addEventListener("submit", function (event) {
             var homeTeamSelect = document.getElementById("HomeTeam");
             var awayTeamSelect = document.getElementById("AwayTeam");
@@ -45,5 +48,5 @@
                 document.getElementById("alertMessage").style.display = "block";
             }
         });
-    </script>
+    </script>*@
 }
