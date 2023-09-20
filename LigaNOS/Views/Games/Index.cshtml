@@ -24,10 +24,13 @@
 <div>
     <h1 class="page-title-style">List of Games</h1>
     <p class="games-create-button">
-        @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Staff") || this.User.IsInRole("Admin"))
+        @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Staff"))
         {
             <a asp-action="Create" class="btn btn-primary adjusted-button rounded"><i class="fas fa-plus"></i> Create Game</a>
             <button class="btn btn-primary adjusted-button rounded" onclick="confirmStartSeason()"><i class="fas fa-plus"></i> Start Season</button>
+        }
+        @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin"))
+        {
             <button class="btn btn-danger adjusted-button-custom rounded" onclick="confirmEndSeason()"><i class="fas fa-minus"></i> End Season</button>
         }
     </p>
@@ -131,10 +134,15 @@
                         @Html.DisplayFor(modelItem => item.IsPlayed)
                     </td>
                     <td class="d-flex">
-                        @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Staff") || this.User.IsInRole("Admin"))
+                        @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Staff"))
                         {
                             <div class="btn-group" role="group" style="display: inline-block;">
                                 <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary btn-margin-right rounded adjusted-icon"><i class="fa-solid fa-pen-to-square"></i></a>
+                            </div>
+                        }
+                        @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin"))
+                        {
+                            <div class="btn-group" role="group" style="display: inline-block;">
                                 <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger rounded custom-button adjusted-icon"><i class="fa fa-trash"></i></a>
                             </div>
                         }

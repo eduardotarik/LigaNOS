@@ -106,7 +106,7 @@
 </div>
 
 <div>
-    @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Staff") || this.User.IsInRole("Admin"))
+    @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Staff"))
     {
         <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary games-btn-pos"><i class="fa-solid fa-pen-to-square"></i> Edit</a>
     }

@@ -21,7 +21,7 @@
                 <partial name="_Games" />
 
                 <div class="form-group">
-                    @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Staff") || this.User.IsInRole("Admin"))
+                    @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Staff"))
                     {
                         <button type="submit" value="Save" class="btn btn-primary"><i class="fa fa-save"></i> Save</button>
                     }

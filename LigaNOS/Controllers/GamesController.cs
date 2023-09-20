@@ -55,20 +55,9 @@ namespace LigaNOS.Controllers
         }
 
         // GET: Games/Create
+        [RoleAuthorization("Staff")]
         public IActionResult Create()
         {
-            if (!User.IsInRole("Staff"))
-            {
-                // If the user is not a staff member, return the "NotAuthorized" view
-                return View("NotAuthorized");
-            }
-
-            if (!User.IsInRole("Staff") || !User.IsInRole("Admin"))
-            {
-                // If the user is not an admin, return the "NotAuthorized" view
-                return View("NotAuthorized");
-            }
-
             var newGame = new Game();
             newGame.Date = DateTime.Today; // Set a default date for testing
 
@@ -100,15 +89,9 @@ namespace LigaNOS.Controllers
 
 
         // GET: Games/Edit/5
+        [RoleAuthorization("Staff")]
         public async Task<IActionResult> Edit(int? id)
         {
-
-            if (!User.IsInRole("Staff") || !User.IsInRole("Admin"))
-            {
-                // If the user is not a staff member, return the "NotAuthorized" view
-                return View("NotAuthorized");
-            }
-
             if (id == null)
             {
                 return View("GameNotFound");
@@ -165,15 +148,9 @@ namespace LigaNOS.Controllers
         }
 
         // GET: Games/Delete/5
+        [RoleAuthorization("Staff", "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
-
-            if (!User.IsInRole("Admin"))
-            {
-                // If the user is not an admin, return the "NotAuthorized" view
-                return View("NotAuthorized");
-            }
-
             if (id == null)
             {
                 return View("GameNotFound");
@@ -270,14 +247,9 @@ namespace LigaNOS.Controllers
         }
 
         [HttpPost]
+        [RoleAuthorization("Staff")]
         public async Task<IActionResult> IssueCard(int gameId, string cardType, string team)
         {
-            if (!User.IsInRole("Staff"))
-            {
-                // If the user is not a staff member, return the "NotAuthorized" view
-                return View("NotAuthorized");
-            }
-
             var game = await _gameRepository.GetByIdAsync(gameId);
 
             if (game == null)
@@ -319,15 +291,8 @@ namespace LigaNOS.Controllers
             return View();
         }
 
-
         public async Task<IActionResult> GenerateSeasonGames()
         {
-            if (!User.IsInRole("Staff"))
-            {
-                // If the user is not a staff member, return the "NotAuthorized" view
-                return View("NotAuthorized");
-            }
-
             var teams = _teamRepository.GetAll().ToList();
 
             // Clear existing games
@@ -373,14 +338,9 @@ namespace LigaNOS.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [RoleAuthorization("Staff")]
         public async Task<IActionResult> StartSeason()
         {
-
-            if (!User.IsInRole("Staff") || !User.IsInRole("Admin"))
-            {
-                // If the user is not a staff member, return the "NotAuthorized" view
-                return View("NotAuthorized");
-            }
 
             // Generate the season's games
             await GenerateSeasonGames();
@@ -397,15 +357,10 @@ namespace LigaNOS.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+
+        [RoleAuthorization("Admin")]
         public async Task<IActionResult> EndSeason()
         {
-            // Check if the user is an admin
-            if (!User.IsInRole("Admin"))
-            {
-                // If the user is not an admin, return the "NotAuthorized" view
-                return View("NotAuthorized");
-            }
-
             await _gameRepository.ClearGamesAsync();
 
             var games = await _gameRepository.GetAllAsync();

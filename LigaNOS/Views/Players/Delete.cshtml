@@ -44,7 +44,7 @@
 
 
 <div>
-    @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Team") || this.User.IsInRole("Admin"))
+    @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin"))
     {
         <form asp-action="Delete">
             <input type="hidden" asp-for="Id" />
